@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   Box,
   Button,
@@ -15,12 +15,7 @@ import {
 import { FiEdit2, FiStar } from "react-icons/fi";
 
 import { useGraph } from "../../hooks/useGraph";
-import {
-  CredentialType,
-  IDKitWidget,
-  ISuccessResult,
-  solidityEncode,
-} from "@worldcoin/idkit";
+import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
 import { generateAttestation, generateSignal } from "../../utils/helpers";
 import { useMetaMask } from "../../hooks/useMetamask";
 interface Props {
@@ -32,6 +27,11 @@ export default function ContractView(props: Props) {
   const {
     state: { wallet },
   } = useMetaMask();
+
+  const signal = useMemo(() => {
+    if (!wallet || !contractAddress) return;
+    return generateSignal(wallet, contractAddress, 7);
+  }, [wallet, contractAddress]);
 
   const { queryAttestation } = useGraph();
   const [isLoading, setIsLoading] = React.useState(false);
@@ -161,10 +161,11 @@ export default function ContractView(props: Props) {
 
           <IDKitWidget
             app_id="app_eb57bcd2529a2b84af1704d76ab9210c"
-            action={solidityEncode(["uint256"], ["attest"])}
-            signal={generateSignal(state.wallet, contractAddress, 7)}
+            action={"attest"}
+            signal={signal}
             theme={colorMode}
             onSuccess={async (proof: ISuccessResult) => {
+              console.log("proof", proof);
               await generateAttestation(
                 proof.merkle_root,
                 proof.proof,
