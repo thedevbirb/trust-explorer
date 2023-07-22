@@ -11,7 +11,6 @@ type Attestation @entity(immutable: true) {
 
 type Contract @entity {
   id: ID!
-  address: Bytes!
   attestations: [Attestation!]! @derivedFrom(field: "recipient")
   attestationsCount: Int!
   scoreSum: Int!

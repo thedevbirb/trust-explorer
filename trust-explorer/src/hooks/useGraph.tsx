@@ -13,25 +13,20 @@ const Client = () =>
     cache: new InMemoryCache(),
   });
 type AttestedsQueryResult = {
-  attester: string;
-  id: string;
-  recipient: string;
-  uid: string;
+  attestationsCount: number;
+  scoreAvg: string;
 };
 
 export const useGraph = () => {
   const queryAttestation = async (
     contract: string
   ): Promise<AttestedsQueryResult[]> => {
-    const itemToQuery = 1000;
-
+    if (!contract) return [];
     const query = gql`
       {
-        attesteds(where: {recipient: "${contract}"}) {
-          id
-          recipient
-          attester
-          uid
+        contracts(where: {id: "${contract.toLowerCase()}"}) { 
+          attestationsCount
+          scoreAvg
         }
       }
     `;
@@ -39,7 +34,7 @@ export const useGraph = () => {
       query,
     })) as any;
 
-    return response.data.attesteds;
+    return response.data.contracts;
   };
 
   return {

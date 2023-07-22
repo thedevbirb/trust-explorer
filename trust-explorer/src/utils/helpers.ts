@@ -12,10 +12,10 @@ const eas = new EAS(EAS_CONTRACT_ADDRESS);
 
 export function generateSignal(
   attester: string,
-  contractAddress: string | null | undefined,
+  contractAddress: string,
   score: number
 ) {
-  if (!contractAddress) return;
+  if (!contractAddress || !score) return;
   const signal = ethers.solidityPacked(
     ["address", "address", "uint8"],
     [attester, contractAddress, score]
@@ -31,14 +31,13 @@ export async function generateAttestation(
   score: number,
   contract: string
 ) {
+  console.log("score", score);
   const provider = new ethers.BrowserProvider(window.ethereum);
   const signer = await provider.getSigner();
-  console.log("signer", signer);
-  eas.connect(signer as any);
 
   // Initialize SchemaEncoder with the schema string
   const schemaEncoder = new SchemaEncoder(
-    "uint8 score,uint256 root,uint256 nullifierHash,bytes memory proof"
+    "uint8 score,uint256 root,uint256 nullifierHash,bytes proof"
   );
 
   const encodedData = schemaEncoder.encodeData([
@@ -51,7 +50,8 @@ export async function generateAttestation(
   console.log("encodedData", encodedData);
 
   const schemaUID =
-    "0x983d44f93dfaac4764f1189f3bc04a4cd5e134e1f79b7dd185af10c9c5db3871";
+    "0xfd1d09737b6a97b7feae8d388f71e17b8dec6cb19d10ab6fef6bc337859cdb2b";
+  //"0x983d44f93dfaac4764f1189f3bc04a4cd5e134e1f79b7dd185af10c9c5db3871";
 
   try {
     const tx = await window.ethereum.request({
@@ -61,7 +61,7 @@ export async function generateAttestation(
           from: await signer.getAddress(),
           to: EAS_CONTRACT_ADDRESS,
           data:
-            "0xf17325e70000000000000000000000000000000000000000000000000000000000000020" +
+            "0xf17325e7" +
             ethers.AbiCoder.defaultAbiCoder()
               .encode(
                 ["uint256", "address", "uint256", "bool", "bytes", "uint256"],
@@ -74,35 +74,6 @@ export async function generateAttestation(
         },
       ],
     });
-
-    // const easContract = new ethers.Contract(
-    //   EAS_CONTRACT_ADDRESS,
-    //   easabi,
-    //   signer
-    // );
-    // try {
-    //   const realtx = await easContract.attest(
-    //     schemaUID,
-    //     [contract, 0, true, ZERO_BYTES32, encodedData, 0],
-    //     {
-    //       gasLimit: 1000000,
-    //     }
-    //   );
-    //   const tx = await eas.attest({
-    //     schema: schemaUID,
-    //     data: {
-    //       recipient: contract,
-    //       expirationTime: 0,
-    //       revocable: true,
-    //       data: encodedData,
-    //       refUID: ZERO_BYTES32,
-    //     },
-    //   });
-    //   const newAttestationUID = await realtx.wait();
-    //   console.log("New attestation UID:", newAttestationUID);
-    // } catch (e) {
-    //   console.log("error", e);
-    // }
   } catch (e) {
     console.log("error", e);
   }

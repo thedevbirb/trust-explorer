@@ -10,7 +10,7 @@ export function handleAttested(event: AttestedEvent): void {
   if (
     event.params.schema.equals(
       Bytes.fromHexString(
-        "0xf58b8b212ef75ee8cd7e8d803c37c03e0519890502d5e99ee2412aae1456cafe"
+        "0xfd1d09737b6a97b7feae8d388f71e17b8dec6cb19d10ab6fef6bc337859cdb2b"
       )
     )
   ) {

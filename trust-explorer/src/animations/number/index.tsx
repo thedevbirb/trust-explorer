@@ -3,11 +3,12 @@ import { Box } from "@chakra-ui/react";
 
 interface Props {
   targetValue: number;
+  reviewsCount: number;
   animationDuration: number;
 }
 
 export default function NumberAnimation(props: Props) {
-  const { targetValue, animationDuration } = props;
+  const { targetValue, animationDuration, reviewsCount } = props;
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -36,7 +37,7 @@ export default function NumberAnimation(props: Props) {
 
   return (
     <Box color="white" fontSize="2xl" fontWeight="bold">
-      {Math.round(count)} Reviews By Users
+      {reviewsCount} Reviews By Users
     </Box>
   );
 }

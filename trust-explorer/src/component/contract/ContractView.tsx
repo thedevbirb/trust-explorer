@@ -1,20 +1,18 @@
 import React, { useEffect, useMemo } from "react";
 import {
   Box,
-  Button,
   Heading,
   Stack,
   Flex,
   Icon,
   Text,
   useColorMode,
-  LightMode,
   useColorModeValue,
   Alert,
   AlertIcon,
   AlertTitle,
 } from "@chakra-ui/react";
-import { FiEdit2, FiStar } from "react-icons/fi";
+import { FiStar } from "react-icons/fi";
 
 import { useGraph } from "../../hooks/useGraph";
 import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
@@ -22,6 +20,7 @@ import { generateAttestation, generateSignal } from "../../utils/helpers";
 import { useMetaMask } from "../../hooks/useMetamask";
 import NumberAnimation from "../../animations/number";
 import { SubmitReview } from "../SubmitReview";
+import { useAsyncMemo } from "use-async-memo";
 interface Props {
   contractAddress: string;
 }
@@ -32,28 +31,29 @@ export default function ContractView(props: Props) {
     state: { wallet },
   } = useMetaMask();
 
-  const signal = useMemo(() => {
-    if (!wallet || !contractAddress) return;
-    return generateSignal(wallet, contractAddress, 7);
-  }, [wallet, contractAddress]);
-
   const { queryAttestation } = useGraph();
   const [isLoading, setIsLoading] = React.useState(false);
-  const [rating, setRating] = React.useState<number | null>(Math.floor(null)); // Add state to store the user's rating
+  const [rating, setRating] = React.useState<number | null>(null);
+  const [reviewsCount, setReviewsCount] = React.useState<number | null>(null);
+  const [selectedRating, setSelectedRating] = React.useState<number | null>(
+    null
+  );
   const [reviews, setReviews] = React.useState<number>(null);
   const [numberOfTransactions, setNumberOfTransactions] = React.useState<
     number | null
   >(null);
 
-  useEffect(() => {
-    const randomRating = Math.floor(Math.random() * 10);
-    setRating(randomRating);
-  }, []);
+  const signal = useMemo(() => {
+    if (!wallet || !contractAddress || !selectedRating) return;
+    return generateSignal(wallet, contractAddress, selectedRating);
+  }, [wallet, contractAddress]);
 
-  useEffect(() => {
-    const randomReview = Math.floor(Math.random() * 10);
-    setReviews(randomReview);
-  }, []);
+  useAsyncMemo(async () => {
+    if (!contractAddress) return;
+    const res = await queryAttestation(contractAddress);
+    setReviewsCount(res[0].attestationsCount);
+    setRating(Number(res[0].scoreAvg));
+  }, [contractAddress]);
 
   useEffect(() => {
     const randomTransactions = Math.floor(Math.random() * 100);
@@ -63,13 +63,10 @@ export default function ContractView(props: Props) {
   const { colorMode } = useColorMode();
   const { state } = useMetaMask();
 
-  const handleClick = async (newRating: number) => {
+  const handleClick = async () => {
     setIsLoading(true);
     await new Promise((r) => setTimeout(r, 2000));
     setIsLoading(false);
-    const newScore = (rating * reviews + newRating) / (reviews + 1);
-    setReviews(reviews + 1);
-    setRating(newScore);
   };
 
   const message =
@@ -124,7 +121,11 @@ export default function ContractView(props: Props) {
         >
           <Box flex="1" mr={{ base: 0, md: 8 }}>
             <Flex direction="column" alignItems="center" mt={8} gap={3}>
-              <NumberAnimation targetValue={reviews} animationDuration={1500} />{" "}
+              <NumberAnimation
+                reviewsCount={reviewsCount}
+                targetValue={reviews}
+                animationDuration={1500}
+              />{" "}
               {/* Star Rating */}
               <Stack direction="row" spacing={2} align="center">
                 <Text color="white" fontSize="xl" fontWeight="semibold">
@@ -148,23 +149,28 @@ export default function ContractView(props: Props) {
               <IDKitWidget
                 app_id="app_eb57bcd2529a2b84af1704d76ab9210c"
                 action={"attest"}
-                signal={generateSignal(state.wallet, contractAddress, 7)}
+                signal={signal}
                 theme={colorMode}
                 onSuccess={async (proof: ISuccessResult) => {
-                  console.log(proof);
                   await generateAttestation(
                     proof.merkle_root,
                     proof.proof,
                     proof.nullifier_hash,
-                    7,
+                    selectedRating,
                     contractAddress
                   );
-                  await handleClick(7);
+                  await handleClick();
                 }}
                 credential_types={[CredentialType.Orb, CredentialType.Phone]}
                 enableTelemetry
               >
-                {({ open }) => <SubmitReview open={open} />}
+                {({ open }) => (
+                  <SubmitReview
+                    open={open}
+                    selectedRating={selectedRating}
+                    setSelectedRating={setSelectedRating}
+                  />
+                )}
               </IDKitWidget>
             </Flex>
           </Box>

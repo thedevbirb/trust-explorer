@@ -16,10 +16,14 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { FiEdit2, FiStar } from "react-icons/fi";
 
-export const SubmitReview = (props: { open: () => void }) => {
+export const SubmitReview = (props: {
+  open: () => void;
+  selectedRating: number;
+  setSelectedRating: (arg1: number) => void;
+}) => {
   const { open } = props;
   const router = useRouter();
-  const { isOpen, onToggle, onClose } = useDisclosure();
+  const { onClose } = useDisclosure();
   const [rating, setRating] = useState<number | null>(null);
 
   const handleRating = (rating: number) => {
@@ -59,9 +63,8 @@ export const SubmitReview = (props: { open: () => void }) => {
             ))}
             <Button
               marginLeft={2}
-              onClick={() => {
+              onClick={async () => {
                 open();
-                //router.reload();
               }}
             >
               Submit
