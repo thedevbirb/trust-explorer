@@ -21,7 +21,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
 // --- Icons ---
-import { FiGithub, FiSearch } from "react-icons/fi";
+import { FiBox, FiSearch } from "react-icons/fi";
 
 // --- Validation Schema and Type ---
 const validationSchema = Yup.object().shape({
@@ -55,7 +55,7 @@ export default function Search({
             <InputGroup size="lg" variant="outline" borderColor="gray.600">
               <InputLeftElement
                 pointerEvents="none"
-                children={<FiGithub size="1.5rem" color="white" />}
+                children={<FiBox size="1.5rem" color="white" />}
               />
               <Input
                 {...register("address")}
