@@ -69,7 +69,6 @@ export default function ContractView(props: Props) {
   }, []);
 
   const { colorMode } = useColorMode();
-  const { state } = useMetaMask();
 
   useEffect(() => {
     // Set a timeout for each star to activate with a delay
@@ -80,12 +79,6 @@ export default function ContractView(props: Props) {
     // Clear the timeout when the component unmounts
     return () => clearTimeout(timeout);
   }, [activeStars]); // Run the effect whenever activeStars changes
-
-  const handleClick = async () => {
-    setIsLoading(true);
-    await new Promise((r) => setTimeout(r, 2000));
-    setIsLoading(false);
-  };
 
   const message =
     rating === null ? (
