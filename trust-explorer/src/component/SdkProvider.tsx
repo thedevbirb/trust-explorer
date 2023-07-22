@@ -31,7 +31,6 @@ export const SdkLayout: React.FC<PropsWithChildren> = ({ children }) => {
           { wallet: null, balance: null };
 
       instantiateSdk();
-
       dispatch({ type: "pageLoaded", isMetaMaskInstalled, wallet, balance });
     }
   }, []);

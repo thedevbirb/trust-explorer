@@ -1,17 +1,9 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
 import { extendTheme } from "@chakra-ui/react";
-import { MetaMaskSDK } from "@metamask/sdk";
-import { MetaMaskProvider, useMetaMask } from "../hooks/useMetamask";
+import { MetaMaskProvider } from "../hooks/useMetamask";
 import { SdkLayout } from "../component/SdkProvider";
 
-// export const MMSDK = new MetaMaskSDK({
-//   dappMetadata: {
-//     name: "Trust Explorer",
-//     url: "https://trustexplorer.io/favicon.ico",
-//   },
-// });
-// export const ethereum = MMSDK.getProvider();
 const colors = {
   brand: {
     900: "#1a365d",
