@@ -6,10 +6,11 @@ const eas = new EAS(EAS_CONTRACT_ADDRESS);
 
 export function generateSignal(
   attester: string,
-  contractAddress: string,
+  contractAddress: string | null | undefined,
   score: number
 ) {
   console.log("inside generate signal");
+  if (!contractAddress) return;
   const signal = ethers.AbiCoder.defaultAbiCoder().encode(
     ["address", "address", "uint8"],
     [attester, contractAddress, score]
