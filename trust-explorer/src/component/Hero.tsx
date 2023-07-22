@@ -21,7 +21,7 @@ export default function Hero() {
           </Text>
         </Heading>
         <Text color={"gray.400"} maxW={"4xl"}>
-          Review contracts with <b>Ethereum Attestations at TrustlessPilot</b>.
+          Review contracts using <b>Ethereum Attestations with Trust Explorer</b>.
           Ensure trust and security in blockchain. Sybil protection thwarts
           bots. Join now to shape the decentralized future!
         </Text>
