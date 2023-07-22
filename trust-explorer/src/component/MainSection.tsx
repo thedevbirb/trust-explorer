@@ -17,19 +17,12 @@ import { useMemo } from "react";
 import { generateAttestation, generateSignal } from "../utils/helpers";
 
 export default function MainSection() {
+  const { colorMode } = useColorMode();
   const router = useRouter();
 
   const handleSearchAddress = (address?: string) => {
     router.push(address);
   };
-
-  const { colorMode } = useColorMode();
-  const router = useRouter();
-  const contractAddress = useMemo(
-    () => router.query.contractAddress,
-    [router.query.contractAddress]
-  );
-
   return (
     <>
       <MotionContainer
