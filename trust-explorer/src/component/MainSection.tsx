@@ -14,8 +14,10 @@ import MotionContainer from "./MotionContainer";
 import { slide } from "../animations";
 
 export default function MainSection() {
+  const router = useRouter();
+
   const handleSearchAddress = (address?: string) => {
-    console.log("hello");
+    router.push(address);
   };
 
   return (

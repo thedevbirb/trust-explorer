@@ -68,9 +68,9 @@ export default function Search({
                 bg="gray.600"
                 borderColor="gray.600"
                 borderRadius="xl"
-                focusBorderColor="purple.500"
+                focusBorderColor="blue.500"
                 _placeholder={{ color: "gray.400" }}
-                _hover={{ borderColor: "purple.300" }}
+                _hover={{ borderColor: "blue.300" }}
               />
             </InputGroup>
             {!errors.address ? (
@@ -91,7 +91,7 @@ export default function Search({
             isLoading={isSubmitting}
             size="lg"
             borderRadius="xl"
-            colorScheme="purple"
+            colorScheme="blue"
           />
         </HStack>
       </form>
