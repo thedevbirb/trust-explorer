@@ -9,6 +9,9 @@ import {
   Icon,
   Text,
   useColorMode,
+  Alert,
+  AlertIcon,
+  AlertTitle,
 } from "@chakra-ui/react";
 import { FiEdit2, FiStar } from "react-icons/fi";
 
@@ -80,14 +83,36 @@ export default function ContractView(props: Props) {
     },
   };
 
-  let { message, messageColor } =
-    rating === null
-      ? messageData.nullRating
-      : rating <= 5
-      ? messageData.scamRating
-      : rating <= 7
-      ? messageData.likeRating
-      : messageData.goodRating;
+  // let { message, messageColor } =
+  //   rating === null
+  //     ? messageData.nullRating
+  //     : rating <= 5
+  //     ? messageData.scamRating
+  //     : rating <= 7
+  //     ? messageData.likeRating
+  //     : messageData.goodRating;
+  const message =
+    rating === null ? (
+      <Alert status="info" rounded="xl">
+        <AlertIcon />
+        <AlertTitle>No Rating</AlertTitle>
+      </Alert>
+    ) : rating <= 5 ? (
+      <Alert status="error" rounded="xl">
+        <AlertIcon />
+        <AlertTitle>Looks Scam</AlertTitle>
+      </Alert>
+    ) : rating <= 7 ? (
+      <Alert status="warning" rounded="xl">
+        <AlertIcon />
+        <AlertTitle>It's fine</AlertTitle>
+      </Alert>
+    ) : (
+      <Alert status="success" rounded="xl">
+        <AlertIcon />
+        <AlertTitle>Looks Good!</AlertTitle>
+      </Alert>
+    );
 
   return (
     <Flex alignItems="center">
@@ -131,16 +156,9 @@ export default function ContractView(props: Props) {
             ))}
           </Stack>
 
-          {rating !== null && (
-            <Text
-              mt={2}
-              color={messageColor}
-              fontWeight="bold"
-              fontSize={"2xl"}
-            >
-              {message}
-            </Text>
-          )}
+          <Stack w="fit-content" mt="2">
+            {message}
+          </Stack>
 
           <Button
             leftIcon={<FiEdit2 />}
