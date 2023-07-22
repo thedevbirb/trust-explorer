@@ -37,32 +37,6 @@ export default function MainSection() {
       >
         <Center w="full" h="full">
           <SearchComponent handleSearchAddress={handleSearchAddress} />
-          <Box w="300px" h="300px" color="red">
-            <IDKitWidget
-              app_id="app_eb57bcd2529a2b84af1704d76ab9210c"
-              action="attest"
-              signal={generateSignal(
-                state.wallet || "0xc2e9A90a9B957c4687c5944491f86E29C10Cb439",
-                contractAddress,
-                7
-              )}
-              theme={colorMode}
-              onSuccess={async (proof: ISuccessResult) => {
-                console.log("hello!");
-                await generateAttestation(
-                  proof.merkle_root,
-                  proof.proof,
-                  proof.nullifier_hash
-                );
-              }}
-              credential_types={[CredentialType.Orb, CredentialType.Phone]}
-              enableTelemetry
-            >
-              {({ open }) => (
-                <button onClick={open}>Verify with World ID</button>
-              )}
-            </IDKitWidget>
-          </Box>
         </Center>
       </MotionContainer>
     </>
