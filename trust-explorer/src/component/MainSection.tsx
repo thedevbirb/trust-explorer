@@ -14,28 +14,22 @@ import MotionContainer from "./MotionContainer";
 import { slide } from "../animations";
 
 export default function MainSection() {
-  const router = useRouter();
-
-  const handleSearchLogin = (login?: string) => {
-    login &&
-      router.push({
-        pathname: "/user/[login]",
-        query: { login },
-      });
+  const handleSearchAddress = (address?: string) => {
+    console.log("hello");
   };
 
   return (
     <>
       <MotionContainer
         w="full"
-        h="100vh"
+        h="40vh"
         initial="initial"
         animate="animate"
         exit="exit"
         variants={slide}
       >
         <Center w="full" h="full">
-          <SearchComponent handleSearchLogin={handleSearchLogin} />
+          <SearchComponent handleSearchAddress={handleSearchAddress} />
         </Center>
       </MotionContainer>
     </>

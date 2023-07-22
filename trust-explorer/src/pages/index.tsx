@@ -1,13 +1,17 @@
-import { useState } from "react";
 import Homepage from "../component/Homepage";
 import MainSection from "../component/MainSection";
+import Hero from "../component/Hero";
+import { Container } from "@chakra-ui/react";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <Container maxW={"6xl"}>
       <Homepage>
-        <MainSection />
+        <div>
+          <Hero />
+          <MainSection />
+        </div>
       </Homepage>
-    </main>
+    </Container>
   );
 }
