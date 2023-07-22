@@ -162,7 +162,7 @@ export default function ContractView(props: Props) {
                 credential_types={[CredentialType.Orb, CredentialType.Phone]}
                 enableTelemetry
               >
-                {({ open }) => <SubmitReview />}
+                {({ open }) => <SubmitReview open={open} />}
               </IDKitWidget>
             </Flex>
           </Box>
