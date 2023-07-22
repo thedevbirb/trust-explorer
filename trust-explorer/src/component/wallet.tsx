@@ -6,9 +6,7 @@ import Image from "next/image";
 import { instantiateSdk } from "../lib/metamaskSDK";
 import { useGraph } from "../hooks/useGraph";
 
-export default function Wallet({ Component, pageProps }: AppProps) {
-  const { queryAttestation } = useGraph();
-
+export default function Wallet() {
   const {
     dispatch,
     state: { status, isMetaMaskInstalled, wallet },
@@ -38,7 +36,7 @@ export default function Wallet({ Component, pageProps }: AppProps) {
 
   return (
     <Box
-      p={4}
+      p={2}
       bgGradient="linear(to-r, green.200, pink.500)"
       margin={"auto"}
       width={"fit-content"}
@@ -49,13 +47,13 @@ export default function Wallet({ Component, pageProps }: AppProps) {
       <Flex>
         <Text
           width={isConnected ? 100 : "fit-content"}
-          fontSize={20}
+          fontSize={16}
           isTruncated={true}
         >
           {isConnected ? wallet : "Connect Wallet"}
         </Text>
         {isConnected && (
-          <Image alt="waifu-connect" src="/waifu.png" width={30} height={6} />
+          <Image alt="waifu-connect" src="/waifu.png" width={18} height={6} />
         )}
       </Flex>
     </Box>
