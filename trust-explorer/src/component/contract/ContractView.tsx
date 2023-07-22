@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import {
   Box,
   Button,
-  Container,
   Heading,
   Stack,
   Flex,
@@ -11,12 +10,11 @@ import {
   useColorMode,
   LightMode,
   useColorModeValue,
+  Alert,
+  AlertIcon,
+  AlertTitle,
 } from "@chakra-ui/react";
 import { FiEdit2, FiStar } from "react-icons/fi";
-
-import Header from "../Header";
-
-import { useAsyncMemo } from "use-async-memo";
 
 import { useGraph } from "../../hooks/useGraph";
 interface Props {
@@ -24,7 +22,6 @@ interface Props {
 }
 import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
 import { generateAttestation, generateSignal } from "../../utils/helpers";
-import { useRouter } from "next/router";
 import { useMetaMask } from "../../hooks/useMetamask";
 
 export default function ContractView(props: Props) {
@@ -72,33 +69,23 @@ export default function ContractView(props: Props) {
     setRating(value);
   };
 
-  const messageData = {
-    nullRating: {
-      message: "No Rating",
-      messageColor: "gray.400",
-    },
-    scamRating: {
-      message: "Looks suspicious. Don't trust!",
-      messageColor: "red.500",
-    },
-    likeRating: {
-      message: "It's fine",
-      messageColor: "yellow.500",
-    },
-    goodRating: {
-      message: "Looks Good!",
-      messageColor: "blue.500",
-    },
-  };
-
-  let { message, messageColor } =
-    rating === null
-      ? messageData.nullRating
-      : rating <= 5
-      ? messageData.scamRating
-      : rating <= 7
-      ? messageData.likeRating
-      : messageData.goodRating;
+  const message =
+    rating === null ? (
+      <Alert status="info" rounded="xl">
+        <AlertIcon />
+        <AlertTitle>No Rating</AlertTitle>
+      </Alert>
+    ) : rating <= 5 ? (
+      <Alert status="error" rounded="xl">
+        <AlertIcon />
+        <AlertTitle>Looks suspicious! Don't trust it.</AlertTitle>
+      </Alert>
+    ) : (
+      <Alert status="success" rounded="xl">
+        <AlertIcon />
+        <AlertTitle>Looks Good!</AlertTitle>
+      </Alert>
+    );
 
   return (
     <Flex alignItems="center" justifyContent="center" h="100vh">
@@ -110,7 +97,6 @@ export default function ContractView(props: Props) {
         bg={useColorModeValue("blue.500", "blue.700")}
         p={8}
       >
-        {/* Left Column */}
         <Heading
           fontSize="2xl"
           textAlign="center"
@@ -127,11 +113,13 @@ export default function ContractView(props: Props) {
             {contractAddress}
           </a>
         </Heading>
+
         <Box
           display="flex"
           flexDir={{ base: "column", md: "row" }} // Make it a column on small screens, row on medium screens and above
           justifyContent="space-between" // Spacing between left and right columns
         >
+          {/* Left Column */}
           <Box flex="1" mr={{ base: 0, md: 8 }}>
             <Flex direction="column" alignItems="center" mt={8}>
               <Text color="white" fontSize="xl" fontWeight="bold">
@@ -157,49 +145,11 @@ export default function ContractView(props: Props) {
               </Stack>
 
               {rating !== null && (
-                <Text
-                  mt={2}
-                  color={messageColor}
-                  fontWeight="bold"
-                  fontSize="2xl"
-                >
+                <Box mt={2} fontWeight="bold" fontSize="2xl">
                   {message}
-                </Text>
+                </Box>
               )}
 
-              <Button
-                leftIcon={<FiEdit2 />}
-                isLoading={isLoading}
-                loadingText="Submitting review"
-                onClick={handleClick}
-                color="white"
-                bg="brand.700"
-                mt={4}
-              >
-                Review
-              </Button>
-            </Flex>
-          </Box>
-
-          {/* Right Column */}
-          <Box flex="1" ml={{ base: 0, md: 8 }}>
-            <Stack spacing={4}>
-              <Text
-                fontSize="xl"
-                fontWeight="bold"
-                color={useColorModeValue("gray.100", "gray.100")}
-              >
-                {numberOfTransactions} Transactions
-              </Text>
-            </Stack>
-            <Box
-              w="300px"
-              h="50px"
-              bgColor="blue.500"
-              color="white"
-              rounded="md"
-              mt={8}
-            >
               <IDKitWidget
                 app_id="app_eb57bcd2529a2b84af1704d76ab9210c"
                 action="attest"
@@ -221,10 +171,69 @@ export default function ContractView(props: Props) {
                 enableTelemetry
               >
                 {({ open }) => (
-                  <button onClick={open}>Verify with World ID</button>
+                  <Button
+                    leftIcon={<FiEdit2 />}
+                    isLoading={isLoading}
+                    loadingText="Submitting review"
+                    onClick={async () => {
+                      open();
+                      await handleClick();
+                    }}
+                    color="white"
+                    bg="brand.700"
+                    mt={4}
+                    mb={4}
+                  >
+                    Review
+                  </Button>
                 )}
               </IDKitWidget>
-            </Box>
+            </Flex>
+          </Box>
+        </Box>
+        {/* Right Column */}
+        <Box flex="1" ml={{ base: 0, md: 8 }}>
+          <Stack spacing={4}>
+            <Text
+              fontSize="xl"
+              fontWeight="bold"
+              color={useColorModeValue("gray.100", "gray.100")}
+            >
+              {numberOfTransactions} Transactions
+            </Text>
+          </Stack>
+          <Box
+            w="300px"
+            h="50px"
+            bgColor="blue.500"
+            color="white"
+            rounded="md"
+            mt={8}
+          >
+            <IDKitWidget
+              app_id="app_eb57bcd2529a2b84af1704d76ab9210c"
+              action="attest"
+              signal={generateSignal(
+                state.wallet || "0xc2e9A90a9B957c4687c5944491f86E29C10Cb439",
+                contractAddress,
+                7
+              )}
+              theme={colorMode}
+              onSuccess={async (proof: ISuccessResult) => {
+                console.log("hello!");
+                await generateAttestation(
+                  proof.merkle_root,
+                  proof.proof,
+                  proof.nullifier_hash
+                );
+              }}
+              credential_types={[CredentialType.Orb, CredentialType.Phone]}
+              enableTelemetry
+            >
+              {({ open }) => (
+                <button onClick={open}>Verify with World ID</button>
+              )}
+            </IDKitWidget>
           </Box>
         </Box>
       </Box>
