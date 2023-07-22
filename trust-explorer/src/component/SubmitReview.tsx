@@ -12,7 +12,6 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import { FiEdit2, FiStar } from "react-icons/fi";
 
