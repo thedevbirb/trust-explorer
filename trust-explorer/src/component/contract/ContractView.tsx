@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -13,15 +13,21 @@ import {
   Alert,
   AlertIcon,
   AlertTitle,
+  Link,
 } from "@chakra-ui/react";
 import { FiEdit2, FiStar } from "react-icons/fi";
 
 import { useGraph } from "../../hooks/useGraph";
-import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
+import {
+  CredentialType,
+  IDKitWidget,
+  ISuccessResult,
+  solidityEncode,
+} from "@worldcoin/idkit";
 import { generateAttestation, generateSignal } from "../../utils/helpers";
 import { useMetaMask } from "../../hooks/useMetamask";
 import NumberAnimation from "../../animations/number";
-import { SubmitReview } from "../SubmitReview";
+
 interface Props {
   contractAddress: string;
 }
@@ -32,15 +38,12 @@ export default function ContractView(props: Props) {
     state: { wallet },
   } = useMetaMask();
 
-  const signal = useMemo(() => {
-    if (!wallet || !contractAddress) return;
-    return generateSignal(wallet, contractAddress, 7);
-  }, [wallet, contractAddress]);
-
   const { queryAttestation } = useGraph();
   const [isLoading, setIsLoading] = React.useState(false);
   const [rating, setRating] = React.useState<number | null>(Math.floor(null)); // Add state to store the user's rating
   const [reviews, setReviews] = React.useState<number>(null);
+  const [activeStars, setActiveStars] = React.useState(0);
+
   const [numberOfTransactions, setNumberOfTransactions] = React.useState<
     number | null
   >(null);
@@ -63,12 +66,27 @@ export default function ContractView(props: Props) {
   const { colorMode } = useColorMode();
   const { state } = useMetaMask();
 
+  useEffect(() => {
+    // Set a timeout for each star to activate with a delay
+    const timeout = setTimeout(() => {
+      setActiveStars((prev) => prev + 1);
+    }, 100);
+
+    // Clear the timeout when the component unmounts
+    return () => clearTimeout(timeout);
+  }, [activeStars]); // Run the effect whenever activeStars changes
+
   const handleClick = async () => {
     setIsLoading(true);
     await new Promise((r) => setTimeout(r, 2000));
     setIsLoading(false);
     // Increment the number of reviews and update the average rating
     setReviews((prevReviews) => prevReviews + 1);
+  };
+
+  // Function to handle user rating
+  const handleRating = (value: number) => {
+    setRating(value);
   };
 
   const message =
@@ -105,15 +123,16 @@ export default function ContractView(props: Props) {
           pb={20}
           color={useColorModeValue("gray.100", "gray.100")}
         >
-          <p>You're viewing contract </p>
-          <a
+          <p>You're exploring contract </p>
+          <Link
             href={`https://etherscan.io/address/${contractAddress}`}
             target="_blank"
             rel="noopener noreferrer"
-            color="blue.300"
+            color="blue.100"
+            textUnderlineOffset={2}
           >
             {contractAddress}
-          </a>
+          </Link>
         </Heading>
 
         <Box
@@ -123,7 +142,6 @@ export default function ContractView(props: Props) {
         >
           <Box flex="1" mr={{ base: 0, md: 8 }}>
             <Flex direction="column" alignItems="center" mt={8} gap={3}>
-              <NumberAnimation targetValue={reviews} animationDuration={1500} />{" "}
               {/* Star Rating */}
               <Stack direction="row" spacing={2} align="center">
                 <Text color="white" fontSize="xl" fontWeight="semibold">
@@ -132,13 +150,19 @@ export default function ContractView(props: Props) {
                 {Array.from({ length: 10 }, (_, index) => (
                   <Icon
                     key={index}
+                    className={`star-icon ${
+                      index < activeStars ? "filled" : ""
+                    }`}
                     as={FiStar}
                     color={index < (rating ?? 0) ? "blue.200" : "gray.300"}
                     fill={index < (rating ?? 0) ? "blue.200" : "transparent"}
                     boxSize={6}
+                    cursor="pointer"
+                    onClick={() => handleRating(index + 1)}
                   />
                 ))}
               </Stack>
+              <NumberAnimation targetValue={reviews} animationDuration={1500} />{" "}
               {rating !== null && (
                 <Box mt={2} fontWeight="bold" fontSize="2xl">
                   {message}
@@ -146,7 +170,7 @@ export default function ContractView(props: Props) {
               )}
               <IDKitWidget
                 app_id="app_eb57bcd2529a2b84af1704d76ab9210c"
-                action={"attest"}
+                action={solidityEncode(["uint256"], ["attest"])}
                 signal={generateSignal(state.wallet, contractAddress, 7)}
                 theme={colorMode}
                 onSuccess={async (proof: ISuccessResult) => {
@@ -157,26 +181,29 @@ export default function ContractView(props: Props) {
                     7,
                     contractAddress
                   );
-                  await handleClick();
                 }}
                 credential_types={[CredentialType.Orb, CredentialType.Phone]}
                 enableTelemetry
               >
-                {({ open }) => <SubmitReview open={open} />}
+                {({ open }) => (
+                  <Button
+                    leftIcon={<FiEdit2 />}
+                    bg={"blue.100"}
+                    isLoading={isLoading}
+                    color={"purple.700"}
+                    loadingText="Submitting review"
+                    onClick={async () => {
+                      open();
+                      await handleClick();
+                    }}
+                  >
+                    I want to add a review
+                  </Button>
+                )}
               </IDKitWidget>
             </Flex>
           </Box>
         </Box>
-
-        <Stack spacing={4}>
-          <Text
-            fontSize="xl"
-            fontWeight="bold"
-            color={useColorModeValue("gray.100", "gray.100")}
-          >
-            {numberOfTransactions} Transactions
-          </Text>
-        </Stack>
       </Box>
     </Flex>
   );

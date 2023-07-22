@@ -21,6 +21,8 @@ export const theme = extendTheme({
   },
 });
 
+import "../styles/global.css"; // Import the CSS file we created earlier.
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <MetaMaskProvider>

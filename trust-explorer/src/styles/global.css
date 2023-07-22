@@ -1,0 +1,8 @@
+.star-icon {
+  fill: transparent; /* Start with a transparent fill color to hide the stars initially */
+  transition: fill 2s; /* Use a transition for the fill property with 2s duration */
+}
+
+.star-icon.filled {
+  fill: blue.200; /* When the star is filled, change the fill color to blue.200 */
+}
