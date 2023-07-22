@@ -120,7 +120,7 @@ export default function ContractView(props: Props) {
         <Heading
           fontSize="2xl"
           textAlign="center"
-          pb={20}
+          pb={10}
           color={useColorModeValue("gray.100", "gray.100")}
         >
           <p>You're exploring contract </p>
