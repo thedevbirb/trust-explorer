@@ -4,15 +4,20 @@ import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 const EAS_CONTRACT_ADDRESS = "0x1a5650D0EcbCa349DD84bAFa85790E3e6955eb84";
 const eas = new EAS(EAS_CONTRACT_ADDRESS);
 
-export function generateSignal() {
-  const attester = "0x1a5650D0EcbCa349DD84bAFa85790E3e6955eb84"; // USER ADDRESS
-  const contract = "0x1a5650D0EcbCa349DD84bAFa85790E3e6955eb84"; // CONTRACT ADDRESS
-  const score = 7; // SCORE
-
-  return ethers.AbiCoder.defaultAbiCoder().encode(
+export function generateSignal(
+  attester: string,
+  contractAddress: string,
+  score: number
+) {
+  console.log("inside generate signal");
+  const signal = ethers.AbiCoder.defaultAbiCoder().encode(
     ["address", "address", "uint8"],
-    [attester, contract, score]
+    [attester, contractAddress, score]
   );
+
+  console.log("signal", signal);
+
+  return signal;
 }
 
 export async function generateAttestation(

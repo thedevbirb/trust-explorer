@@ -1,15 +1,12 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
-import type { AppProps } from "next/app";
 import { useMetaMask } from "../hooks/useMetamask";
 import { useListen } from "../hooks/useListen";
 import Image from "next/image";
-import { instantiateSdk } from "../lib/metamaskSDK";
-import { useGraph } from "../hooks/useGraph";
 
 export default function Wallet() {
   const {
     dispatch,
-    state: { status, isMetaMaskInstalled, wallet },
+    state: { status, wallet },
   } = useMetaMask();
   const listen = useListen();
   const isConnected = status !== "pageNotLoaded" && typeof wallet === "string";

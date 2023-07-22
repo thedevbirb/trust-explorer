@@ -1,6 +1,5 @@
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-
 // --- Chakra-UI ---
 import { Box, Center, useColorMode } from "@chakra-ui/react";
 
@@ -15,14 +14,20 @@ import { slide } from "../animations";
 import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
 import { useMemo } from "react";
 import { generateAttestation, generateSignal } from "../utils/helpers";
+import { useMetaMask } from "../hooks/useMetamask";
 
 export default function MainSection() {
   const { colorMode } = useColorMode();
   const router = useRouter();
+  const { state } = useMetaMask();
+  const contractAddress = "0x1a5650D0EcbCa349DD84bAFa85790E3e6955eb84"; // CONTRACT ADDRESS
 
   const handleSearchAddress = (address?: string) => {
     router.push(address);
   };
+
+  console.log("state", state);
+
   return (
     <>
       <MotionContainer
@@ -39,7 +44,11 @@ export default function MainSection() {
             <IDKitWidget
               app_id="app_eb57bcd2529a2b84af1704d76ab9210c"
               action="attest"
-              signal={generateSignal()}
+              signal={generateSignal(
+                state.wallet || "0xc2e9A90a9B957c4687c5944491f86E29C10Cb439",
+                contractAddress,
+                7
+              )}
               theme={colorMode}
               onSuccess={async (proof: ISuccessResult) => {
                 console.log("hello!");
