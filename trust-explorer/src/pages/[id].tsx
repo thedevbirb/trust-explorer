@@ -1,7 +1,3 @@
-import Homepage from "../component/Homepage";
-import MainSection from "../component/MainSection";
-import Hero from "../component/Hero";
-import { Container } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { NextPage } from "next";
 import { useMemo } from "react";
