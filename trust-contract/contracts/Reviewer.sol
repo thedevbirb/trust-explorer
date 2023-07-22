@@ -5,6 +5,7 @@ import {ByteHasher} from "./helpers/ByteHasher.sol";
 import {IWorldID} from "./interfaces/IWorldID.sol";
 import {SchemaResolver} from "./SchemaResolver.sol";
 import {Attestation} from "./helpers/Common.sol";
+import {IEAS} from "./interfaces/IEAS.sol";
 
 contract Reviewer is SchemaResolver {
     using ByteHasher for bytes;
@@ -15,6 +16,7 @@ contract Reviewer is SchemaResolver {
 
     /// @notice Thrown when attempting to reuse a nullifier
     error InvalidNullifier();
+    error InvalidScore();
 
     /// @dev The World ID instance that will be used for verifying proofs
     IWorldID internal immutable worldId;
@@ -34,7 +36,7 @@ contract Reviewer is SchemaResolver {
     /// @param _actionId The World ID action ID
     constructor(
         IWorldID _worldId,
-        address _eas,
+        IEAS _eas,
         string memory _appId,
         string memory _actionId
     ) SchemaResolver(_eas) {
@@ -45,25 +47,26 @@ contract Reviewer is SchemaResolver {
     }
 
     function onAttest(
-        Attestation memory attestation,
-        uint256 value
-    ) public onlyEAS {
+        Attestation calldata attestation,
+        uint256
+    ) internal override onlyEAS returns (bool) {
         (
-            bytes32 uid,
-            bytes32 schema,
-            uint64 time,
-            uint64 expirationTime,
-            uint64 revocationTime,
-            bytes32 refUID,
-            address recipient,
-            address attester,
-            bool revocable,
-            bytes data
-        ) = attestation.data;
+            uint8 score,
+            uint256 root,
+            uint256 nullifierHash,
+            uint256[8] memory proof
+        ) = abi.decode(attestation.data, (uint8, uint256, uint256, uint256[8]));
 
-        // params = abi.decode(data)
+        if (score == 0 || score > 10) {
+            revert InvalidScore();
+        }
 
-        bytes memory signal = abi.encodePacked(msg.sender, attestation.data);
+        bytes memory signal = abi.encodePacked(
+            attestation.attester,
+            attestation.recipient,
+            score
+        );
+
         return verifyAndExecute(signal, root, nullifierHash, proof);
     }
 
@@ -75,8 +78,8 @@ contract Reviewer is SchemaResolver {
         bytes memory signal,
         uint256 root,
         uint256 nullifierHash,
-        uint256[8] calldata proof
-    ) public {
+        uint256[8] memory proof
+    ) public returns (bool) {
         // First, we make sure this person hasn't done this before
         if (nullifierHashes[nullifierHash]) revert InvalidNullifier();
 
@@ -98,9 +101,9 @@ contract Reviewer is SchemaResolver {
     }
 
     function onRevoke(
-        Attestation memory attestation,
-        uint256 value
-    ) public onlyEAS {
+        Attestation calldata attestation,
+        uint256
+    ) internal override onlyEAS returns (bool) {
         return true;
     }
 }
