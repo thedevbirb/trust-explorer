@@ -3,9 +3,11 @@ pragma solidity ^0.8.9;
 
 import {ByteHasher} from "./helpers/ByteHasher.sol";
 import {IWorldID} from "./interfaces/IWorldID.sol";
-import {IEAS, AttestationRequest, AttestationRequestData} from "./interfaces/IEAS.sol";
+import {SchemaResolver} from "./SchemaResolver.sol";
+import {Attestation} from "./helpers/Common.sol";
+import {IEAS} from "./interfaces/IEAS.sol";
 
-contract Reviewer {
+contract Reviewer is SchemaResolver {
     using ByteHasher for bytes;
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -14,21 +16,7 @@ contract Reviewer {
 
     /// @notice Thrown when attempting to reuse a nullifier
     error InvalidNullifier();
-
-    /**
-     * @dev Emitted when an attestation has been made.
-     *
-     * @param recipient The recipient of the attestation.
-     * @param attester The attesting account.
-     * @param uid The UID the revoked attestation.
-     * @param schema The UID of the schema.
-     */
-    event Attested(
-        address indexed recipient,
-        address indexed attester,
-        bytes32 uid,
-        bytes32 indexed schema
-    );
+    error InvalidScore();
 
     /// @dev The World ID instance that will be used for verifying proofs
     IWorldID internal immutable worldId;
@@ -39,11 +27,6 @@ contract Reviewer {
     /// @dev The World ID group ID (always 1)
     uint256 internal immutable groupId = 1;
 
-    /// @dev The EAS instance that will be used for deploying attestations
-    IEAS internal immutable EAS;
-
-    bytes32 public easSchema;
-
     /// @dev Whether a nullifier hash has been used already. Used to guarantee an action is only performed once by a single person
     mapping(uint256 => bool) internal nullifierHashes;
 
@@ -51,20 +34,40 @@ contract Reviewer {
     /// @param _eas The EAS instance that will be used for deploying attestations
     /// @param _appId The World ID app ID
     /// @param _actionId The World ID action ID
-    /// @param _easSchema The EAS schema ID
     constructor(
         IWorldID _worldId,
         IEAS _eas,
         string memory _appId,
-        string memory _actionId,
-        bytes32 _easSchema
-    ) {
+        string memory _actionId
+    ) SchemaResolver(_eas) {
         worldId = _worldId;
-        EAS = _eas;
-        easSchema = _easSchema;
         externalNullifier = abi
             .encodePacked(abi.encodePacked(_appId).hashToField(), _actionId)
             .hashToField();
+    }
+
+    function onAttest(
+        Attestation calldata attestation,
+        uint256
+    ) internal override onlyEAS returns (bool) {
+        (
+            uint8 score,
+            uint256 root,
+            uint256 nullifierHash,
+            uint256[8] memory proof
+        ) = abi.decode(attestation.data, (uint8, uint256, uint256, uint256[8]));
+
+        if (score == 0 || score > 10) {
+            revert InvalidScore();
+        }
+
+        bytes memory signal = abi.encodePacked(
+            attestation.attester,
+            attestation.recipient,
+            score
+        );
+
+        return verifyAndExecute(signal, root, nullifierHash, proof);
     }
 
     /// @param signal An arbitrary input from the user, usually the user's wallet address (check README for further details)
@@ -75,12 +78,13 @@ contract Reviewer {
         bytes memory signal,
         uint256 root,
         uint256 nullifierHash,
-        uint256[8] calldata proof
-    ) public {
+        uint256[8] memory proof
+    ) public returns (bool) {
         // First, we make sure this person hasn't done this before
         if (nullifierHashes[nullifierHash]) revert InvalidNullifier();
 
         // We now verify the provided proof is valid and the user is verified by World ID
+        // Reverts if it fails
         worldId.verifyProof(
             root,
             groupId,
@@ -93,45 +97,13 @@ contract Reviewer {
         // We now record the user has done this, so they can't do it again (proof of uniqueness)
         nullifierHashes[nullifierHash] = true;
 
-        (
-            address recipient,
-            uint64 expirationTime,
-            bytes32 refUID,
-            bytes memory data,
-            uint256 value
-        ) = abi.decode(signal, (address, uint64, bytes32, bytes, uint256));
-
-        _attest(recipient, expirationTime, refUID, data, value);
+        return true;
     }
 
-    /// @param recipient The recipient of the attestation.
-    /// @param expirationTime The expiration time of the attestation.
-    /// @param refUID The UID of the reference attestation.
-    /// @param data The data of the attestation.
-    /// @param value The value of the attestation.
-    function _attest(
-        address recipient,
-        uint64 expirationTime,
-        bytes32 refUID,
-        bytes memory data,
-        uint256 value
-    ) internal {
-        AttestationRequestData memory reqData = AttestationRequestData(
-            recipient,
-            expirationTime,
-            true,
-            refUID,
-            data,
-            value
-        );
-
-        AttestationRequest memory request = AttestationRequest(
-            easSchema,
-            reqData
-        );
-
-        EAS.attest(request);
-
-        emit Attested(recipient, msg.sender, refUID, easSchema);
+    function onRevoke(
+        Attestation calldata attestation,
+        uint256
+    ) internal override onlyEAS returns (bool) {
+        return true;
     }
 }

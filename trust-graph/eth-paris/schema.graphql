@@ -1,0 +1,19 @@
+type Attestation @entity(immutable: true) {
+  id: Bytes!
+  recipient: Contract! # address
+  attester: Bytes! # address
+  uid: Bytes! # bytes32
+  schema: Bytes! # bytes32
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  score: Int!
+}
+
+type Contract @entity {
+  id: ID!
+  address: Bytes!
+  attestations: [Attestation!]! @derivedFrom(field: "recipient")
+  attestationsCount: Int!
+  scoreSum: Int!
+  scoreAvg: BigDecimal!
+}

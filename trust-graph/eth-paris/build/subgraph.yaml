@@ -1,0 +1,24 @@
+specVersion: 0.0.5
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Contract
+    network: optimism-goerli
+    source:
+      address: "0x1a5650D0EcbCa349DD84bAFa85790E3e6955eb84"
+      abi: Contract
+      startBlock: 10961777
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Attested
+      abis:
+        - name: Contract
+          file: Contract/abis/Contract.json
+      eventHandlers:
+        - event: Attested(indexed address,indexed address,bytes32,indexed bytes32)
+          handler: handleAttested
+      file: Contract/Contract.wasm
