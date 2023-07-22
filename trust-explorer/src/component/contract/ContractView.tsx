@@ -1,4 +1,5 @@
-import { Container } from "@chakra-ui/react";
+import { Box, Container, Heading } from "@chakra-ui/react";
+import Header from "../Header";
 
 interface Props {
   address: string;
@@ -6,5 +7,20 @@ interface Props {
 
 export default function ContractView(props: Props) {
   const { address } = props;
-  return <Container maxW={"6xl"}>{address}</Container>;
+  return (
+    <Box overflow="hidden">
+      <Header />
+      <Container maxW={"6xl"} centerContent paddingTop={80} bg="brand.900">
+        <Heading
+          padding="4"
+          maxW="5xl"
+          size={"lg"}
+          color={"white"}
+          textAlign={"center"}
+        >
+          Your viewing contract {address}
+        </Heading>
+      </Container>
+    </Box>
+  );
 }
