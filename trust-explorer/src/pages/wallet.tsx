@@ -7,6 +7,8 @@ import { instantiateSdk } from "../lib/metamaskSDK";
 import { useGraph } from "../hooks/useGraph";
 
 export default function Wallet({ Component, pageProps }: AppProps) {
+  const { queryAttestation } = useGraph();
+
   const {
     dispatch,
     state: { status, isMetaMaskInstalled, wallet },
