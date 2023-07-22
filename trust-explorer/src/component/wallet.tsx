@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 import { useMetaMask } from "../hooks/useMetamask";
 import { useListen } from "../hooks/useListen";
 import Image from "next/image";
@@ -48,6 +48,8 @@ export default function Wallet() {
           width={isConnected ? 100 : "fit-content"}
           fontSize={16}
           isTruncated={true}
+          fontWeight={"bold"}
+          color={useColorModeValue("white", "white")}
         >
           {isConnected ? wallet : "Connect Wallet"}
         </Text>

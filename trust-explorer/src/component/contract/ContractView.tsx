@@ -9,6 +9,8 @@ import {
   Icon,
   Text,
   useColorMode,
+  LightMode,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { FiEdit2, FiStar } from "react-icons/fi";
 
@@ -35,6 +37,9 @@ export default function ContractView(props: Props) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [rating, setRating] = React.useState<number | null>(Math.floor(null)); // Add state to store the user's rating
   const [reviews, setReviews] = React.useState<number>(null);
+  const [numberOfTransactions, setNumberOfTransactions] = React.useState<
+    number | null
+  >(null);
 
   useEffect(() => {
     const randomRating = Math.floor(Math.random() * 10);
@@ -45,6 +50,12 @@ export default function ContractView(props: Props) {
     const randomReview = Math.floor(Math.random() * 1000);
     setReviews(randomReview);
   }, []);
+
+  useEffect(() => {
+    const randomTransactions = Math.floor(Math.random() * 1000);
+    setNumberOfTransactions(randomTransactions);
+  }, []);
+
   const { colorMode } = useColorMode();
   const { state } = useMetaMask();
 
@@ -67,7 +78,7 @@ export default function ContractView(props: Props) {
       messageColor: "gray.400",
     },
     scamRating: {
-      message: "Looks Scam",
+      message: "Looks suspicious. Don't trust!",
       messageColor: "red.500",
     },
     likeRating: {
@@ -90,93 +101,131 @@ export default function ContractView(props: Props) {
       : messageData.goodRating;
 
   return (
-    <Flex alignItems="center">
+    <Flex alignItems="center" justifyContent="center" h="100vh">
       <Box
-        w="1200px" // Set the width to 100vw to take up the entire viewport width
-        mx={"auto"}
-        alignSelf={"center"}
-        marginTop={32}
-        borderRadius={"xl"}
-        alignContent={"center"}
-        bg="brand.900"
+        w="1200px"
+        mx="auto"
+        borderRadius="xl"
+        alignContent="center"
+        bg={useColorModeValue("blue.500", "blue.700")}
+        p={8}
       >
+        {/* Left Column */}
         <Heading
-          padding="4"
-          fontSize={"2xl"}
-          color={"white"}
-          textAlign={"center"}
+          fontSize="2xl"
+          textAlign="center"
+          pb={20}
+          color={useColorModeValue("gray.100", "gray.100")}
         >
-          Your viewing contract {contractAddress}
+          <p>You're viewing contract </p>
+          <a
+            href={`https://etherscan.io/address/${contractAddress}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            color="blue.300"
+          >
+            {contractAddress}
+          </a>
         </Heading>
-        <Flex direction="column" alignItems="center" mt={8}>
-          <Text color="white" fontSize="xl" fontWeight="bold">
-            {reviews} Reviews
-          </Text>
+        <Box
+          display="flex"
+          flexDir={{ base: "column", md: "row" }} // Make it a column on small screens, row on medium screens and above
+          justifyContent="space-between" // Spacing between left and right columns
+        >
+          <Box flex="1" mr={{ base: 0, md: 8 }}>
+            <Flex direction="column" alignItems="center" mt={8}>
+              <Text color="white" fontSize="xl" fontWeight="bold">
+                {reviews} Reviews
+              </Text>
 
-          {/* Star Rating */}
-          <Stack direction="row" spacing={2} align="center">
-            <Text color="white" fontSize="xl" fontWeight="semibold">
-              {rating === null ? "No Rating" : `${rating}/10`}
-            </Text>
-            {Array.from({ length: 10 }, (_, index) => (
-              <Icon
-                key={index}
-                as={FiStar}
-                color={index < (rating ?? 0) ? "blue.200" : "gray.300"}
-                fill={index < (rating ?? 0) ? "blue.200" : "transparent"}
-                boxSize={6}
-                cursor="pointer"
-                onClick={() => handleRating(index + 1)}
-              />
-            ))}
-          </Stack>
+              {/* Star Rating */}
+              <Stack direction="row" spacing={2} align="center">
+                <Text color="white" fontSize="xl" fontWeight="semibold">
+                  {rating === null ? "No Rating" : `${rating}/10`}
+                </Text>
+                {Array.from({ length: 10 }, (_, index) => (
+                  <Icon
+                    key={index}
+                    as={FiStar}
+                    color={index < (rating ?? 0) ? "blue.200" : "gray.300"}
+                    fill={index < (rating ?? 0) ? "blue.200" : "transparent"}
+                    boxSize={6}
+                    cursor="pointer"
+                    onClick={() => handleRating(index + 1)}
+                  />
+                ))}
+              </Stack>
 
-          {rating !== null && (
-            <Text
-              mt={2}
-              color={messageColor}
-              fontWeight="bold"
-              fontSize={"2xl"}
+              {rating !== null && (
+                <Text
+                  mt={2}
+                  color={messageColor}
+                  fontWeight="bold"
+                  fontSize="2xl"
+                >
+                  {message}
+                </Text>
+              )}
+
+              <Button
+                leftIcon={<FiEdit2 />}
+                isLoading={isLoading}
+                loadingText="Submitting review"
+                onClick={handleClick}
+                color="white"
+                bg="brand.700"
+                mt={4}
+              >
+                Review
+              </Button>
+            </Flex>
+          </Box>
+
+          {/* Right Column */}
+          <Box flex="1" ml={{ base: 0, md: 8 }}>
+            <Stack spacing={4}>
+              <Text
+                fontSize="xl"
+                fontWeight="bold"
+                color={useColorModeValue("gray.100", "gray.100")}
+              >
+                {numberOfTransactions} Transactions
+              </Text>
+            </Stack>
+            <Box
+              w="300px"
+              h="50px"
+              bgColor="blue.500"
+              color="white"
+              rounded="md"
+              mt={8}
             >
-              {message}
-            </Text>
-          )}
-
-          <Button
-            leftIcon={<FiEdit2 />}
-            isLoading={isLoading}
-            loadingText="Submitting review"
-            onClick={handleClick}
-            color="white"
-            bg="brand.700"
-            mt={4}
-          >
-            Review
-          </Button>
-        </Flex>
-        <Box w="300px" h="50px" bgColor="blue.500" color="white" rounded={"md"}>
-          <IDKitWidget
-            app_id="app_eb57bcd2529a2b84af1704d76ab9210c"
-            action="attest"
-            signal={generateSignal(
-              state.wallet || "0xc2e9A90a9B957c4687c5944491f86E29C10Cb439",
-              contractAddress,
-              7
-            )}
-            theme={colorMode}
-            onSuccess={async (proof: ISuccessResult) => {
-              console.log("hello!");
-              await generateAttestation(
-                proof.merkle_root,
-                proof.proof,
-                proof.nullifier_hash
-              );
-            }}
-            credential_types={[CredentialType.Orb, CredentialType.Phone]}
-            enableTelemetry
-          >
-            {({ open }) => <button onClick={open}>Verify with World ID</button>}
-          </IDKitWidget>
+              <IDKitWidget
+                app_id="app_eb57bcd2529a2b84af1704d76ab9210c"
+                action="attest"
+                signal={generateSignal(
+                  state.wallet || "0xc2e9A90a9B957c4687c5944491f86E29C10Cb439",
+                  contractAddress,
+                  7
+                )}
+                theme={colorMode}
+                onSuccess={async (proof: ISuccessResult) => {
+                  console.log("hello!");
+                  await generateAttestation(
+                    proof.merkle_root,
+                    proof.proof,
+                    proof.nullifier_hash
+                  );
+                }}
+                credential_types={[CredentialType.Orb, CredentialType.Phone]}
+                enableTelemetry
+              >
+                {({ open }) => (
+                  <button onClick={open}>Verify with World ID</button>
+                )}
+              </IDKitWidget>
+            </Box>
+          </Box>
         </Box>
       </Box>
     </Flex>
