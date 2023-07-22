@@ -14,7 +14,6 @@ import {
 // --- Components ---
 const SearchHistoryComponent = dynamic(() => import("./SearchHistory"));
 const ThemeButtonComponent = dynamic(() => import("./ThemeButton"));
-const InfoLinkComponent = dynamic(() => import("./InfoLink"));
 
 // --- Component Props Interface ---
 interface IMainContentProps {
@@ -52,8 +51,6 @@ export default function Homepage({ children }: IMainContentProps): JSX.Element {
       </Flex>
 
       {children}
-
-      <InfoLinkComponent bgColor={bgColor} />
     </Box>
   );
 }
