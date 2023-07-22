@@ -4,14 +4,13 @@ import Hero from "../component/Hero";
 import { Container } from "@chakra-ui/react";
 import { useSnap } from "../hooks/useSnap";
 import { useAsyncMemo } from "use-async-memo";
+import { useXmtp } from "../hooks/useXmtp";
 
 export default function Home() {
-  const { detectSnap, connectSnap, installSnap } = useSnap();
+  const { handleConnect } = useXmtp();
 
   const detect = useAsyncMemo(async () => {
-    await installSnap();
-    await detectSnap();
-    await connectSnap();
+    await handleConnect();
   }, []);
 
   return (

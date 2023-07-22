@@ -23,6 +23,7 @@
     "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
     "@worldcoin/idkit": "^0.5.1",
+    "@xmtp/react-sdk": "^1.0.0-preview.2",
     "animations": "^0.0.0",
     "autoprefixer": "10.4.14",
     "eslint": "8.45.0",
