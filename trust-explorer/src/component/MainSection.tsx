@@ -17,8 +17,10 @@ import { useMemo } from "react";
 import { generateAttestation, generateSignal } from "../utils/helpers";
 
 export default function MainSection() {
+  const router = useRouter();
+
   const handleSearchAddress = (address?: string) => {
-    console.log("hello");
+    router.push(address);
   };
 
   const { colorMode } = useColorMode();
