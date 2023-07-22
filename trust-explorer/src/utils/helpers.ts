@@ -9,8 +9,9 @@ export function generateSignal(
   contractAddress: string | null | undefined,
   score: number
 ) {
-  console.log("inside generate signal");
-  if (!contractAddress) return;
+  if (!contractAddress || !attester) return;
+  console.log("attester", attester);
+  console.log("contractAddress", contractAddress);
   const signal = ethers.AbiCoder.defaultAbiCoder().encode(
     ["address", "address", "uint8"],
     [attester, contractAddress, score]
@@ -24,7 +25,9 @@ export function generateSignal(
 export async function generateAttestation(
   root: string,
   proof: string,
-  nullifierHash: string
+  nullifierHash: string,
+  score: number,
+  contract: string
 ) {
   const provider = new ethers.BrowserProvider(window.ethereum); //web3Provider(window.ethereum);
   const signer = await provider.getSigner();
@@ -36,19 +39,19 @@ export async function generateAttestation(
   );
 
   const encodedData = schemaEncoder.encodeData([
-    { name: "score", value: 7, type: "uint8" },
+    { name: "score", value: score, type: "uint8" },
     { name: "root", value: root, type: "uint256" },
     { name: "nullifierHash", value: nullifierHash, type: "uint256" },
     { name: "proof", value: proof, type: "bytes" },
   ]);
 
   const schemaUID =
-    "0xb16fa048b0d597f5a821747eba64efa4762ee5143e9a80600d0005386edfc995"; // to replace with our schema uid
+    "0x983d44f93dfaac4764f1189f3bc04a4cd5e134e1f79b7dd185af10c9c5db3871";
 
   const tx = await eas.attest({
     schema: schemaUID,
     data: {
-      recipient: "0xFD50b031E778fAb33DfD2Fc3Ca66a1EeF0652165", // to replace with our contract
+      recipient: contract,
       expirationTime: 0,
       revocable: true,
       data: encodedData,

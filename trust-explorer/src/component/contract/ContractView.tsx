@@ -17,12 +17,18 @@ import {
 import { FiEdit2, FiStar } from "react-icons/fi";
 
 import { useGraph } from "../../hooks/useGraph";
+import {
+  CredentialType,
+  IDKitWidget,
+  ISuccessResult,
+  solidityEncode,
+} from "@worldcoin/idkit";
+import { generateAttestation, generateSignal } from "../../utils/helpers";
+import { useMetaMask } from "../../hooks/useMetamask";
+import NumberAnimation from "../../animations/number";
 interface Props {
   contractAddress: string;
 }
-import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
-import { generateAttestation, generateSignal } from "../../utils/helpers";
-import { useMetaMask } from "../../hooks/useMetamask";
 
 export default function ContractView(props: Props) {
   const { contractAddress } = props;
@@ -121,11 +127,8 @@ export default function ContractView(props: Props) {
         >
           {/* Left Column */}
           <Box flex="1" mr={{ base: 0, md: 8 }}>
-            <Flex direction="column" alignItems="center" mt={8}>
-              <Text color="white" fontSize="xl" fontWeight="bold">
-                {reviews} Reviews
-              </Text>
-
+            <Flex direction="column" alignItems="center" mt={8} gap={3}>
+              <NumberAnimation targetValue={reviews} animationDuration={1500} />{" "}
               {/* Star Rating */}
               <Stack direction="row" spacing={2} align="center">
                 <Text color="white" fontSize="xl" fontWeight="semibold">
@@ -143,28 +146,23 @@ export default function ContractView(props: Props) {
                   />
                 ))}
               </Stack>
-
               {rating !== null && (
                 <Box mt={2} fontWeight="bold" fontSize="2xl">
                   {message}
                 </Box>
               )}
-
               <IDKitWidget
                 app_id="app_eb57bcd2529a2b84af1704d76ab9210c"
-                action="attest"
-                signal={generateSignal(
-                  state.wallet || "0xc2e9A90a9B957c4687c5944491f86E29C10Cb439",
-                  contractAddress,
-                  7
-                )}
+                action={solidityEncode(["uint256"], ["attest"])}
+                signal={generateSignal(state.wallet, contractAddress, 7)}
                 theme={colorMode}
                 onSuccess={async (proof: ISuccessResult) => {
-                  console.log("hello!");
                   await generateAttestation(
                     proof.merkle_root,
                     proof.proof,
-                    proof.nullifier_hash
+                    proof.nullifier_hash,
+                    7,
+                    contractAddress
                   );
                 }}
                 credential_types={[CredentialType.Orb, CredentialType.Phone]}
@@ -179,10 +177,6 @@ export default function ContractView(props: Props) {
                       open();
                       await handleClick();
                     }}
-                    color="white"
-                    bg="brand.700"
-                    mt={4}
-                    mb={4}
                   >
                     Review
                   </Button>
@@ -202,39 +196,6 @@ export default function ContractView(props: Props) {
               {numberOfTransactions} Transactions
             </Text>
           </Stack>
-          <Box
-            w="300px"
-            h="50px"
-            bgColor="blue.500"
-            color="white"
-            rounded="md"
-            mt={8}
-          >
-            <IDKitWidget
-              app_id="app_eb57bcd2529a2b84af1704d76ab9210c"
-              action="attest"
-              signal={generateSignal(
-                state.wallet || "0xc2e9A90a9B957c4687c5944491f86E29C10Cb439",
-                contractAddress,
-                7
-              )}
-              theme={colorMode}
-              onSuccess={async (proof: ISuccessResult) => {
-                console.log("hello!");
-                await generateAttestation(
-                  proof.merkle_root,
-                  proof.proof,
-                  proof.nullifier_hash
-                );
-              }}
-              credential_types={[CredentialType.Orb, CredentialType.Phone]}
-              enableTelemetry
-            >
-              {({ open }) => (
-                <button onClick={open}>Verify with World ID</button>
-              )}
-            </IDKitWidget>
-          </Box>
         </Box>
       </Box>
     </Flex>
