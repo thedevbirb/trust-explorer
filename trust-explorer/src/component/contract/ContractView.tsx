@@ -87,11 +87,6 @@ export default function ContractView(props: Props) {
     setIsLoading(false);
   };
 
-  // Function to handle user rating
-  const handleRating = (value: number) => {
-    setRating(value);
-  };
-
   const message =
     rating === null ? (
       <Alert status="info" rounded="xl">
@@ -166,7 +161,6 @@ export default function ContractView(props: Props) {
                     fill={index < (rating ?? 0) ? "blue.200" : "transparent"}
                     boxSize={6}
                     cursor="pointer"
-                    onClick={() => handleRating(index + 1)}
                   />
                 ))}
               </Stack>
