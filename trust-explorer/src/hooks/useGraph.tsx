@@ -36,7 +36,7 @@ export const useGraph = () => {
     const response = (await Client().query({
       query,
     })) as any;
-    console.log(response.data.attesteds);
+
     return response.data.attesteds;
   };
 
