@@ -24,10 +24,9 @@ export async function generateAttestation(
   score: number,
   contract: string
 ) {
-  console.log("score", score);
   const provider = new ethers.BrowserProvider(window.ethereum);
   const signer = await provider.getSigner();
-
+  if (!score || !contract) return;
   // Initialize SchemaEncoder with the schema string
   const schemaEncoder = new SchemaEncoder(
     "uint8 score,uint256 root,uint256 nullifierHash,bytes proof"
