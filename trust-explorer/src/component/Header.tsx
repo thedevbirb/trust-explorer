@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 
 import Image from "next/image";
+import Wallet from "./wallet";
 
 // --- Components ---
 const SearchHistoryComponent = dynamic(() => import("./SearchHistory"));
@@ -60,6 +61,7 @@ export default function Header() {
         right={[4, 10]}
         zIndex="overlay"
       >
+        <Wallet />
         <SearchHistoryComponent styleProps={buttonStyleProps} />
 
         <ThemeButtonComponent styleProps={buttonStyleProps} />

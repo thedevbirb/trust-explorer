@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import { extendTheme } from "@chakra-ui/react";
 import { MetaMaskProvider } from "../hooks/useMetamask";
 import { SdkLayout } from "../component/SdkProvider";
+import Header from "../component/Header";
 
 const colors = {
   brand: {
@@ -25,6 +26,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <MetaMaskProvider>
       <SdkLayout>
         <ChakraProvider theme={theme}>
+          <Header />
           <Component {...pageProps} />
         </ChakraProvider>
       </SdkLayout>

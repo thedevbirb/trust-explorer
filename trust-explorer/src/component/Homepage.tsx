@@ -1,22 +1,8 @@
 import dynamic from "next/dynamic";
 
 // --- Chakra-UI ---
-import {
-  Box,
-  ComponentDefaultProps,
-  ComponentWithAs,
-  Flex,
-  IconButtonProps,
-  useColorMode,
-  useColorModeValue,
-} from "@chakra-ui/react";
-
-import Image from "next/image";
+import { Box } from "@chakra-ui/react";
 import Header from "./Header";
-
-// --- Components ---
-const SearchHistoryComponent = dynamic(() => import("./SearchHistory"));
-const ThemeButtonComponent = dynamic(() => import("./ThemeButton"));
 
 // --- Component Props Interface ---
 interface IMainContentProps {
@@ -24,12 +10,5 @@ interface IMainContentProps {
 }
 
 export default function Homepage({ children }: IMainContentProps): JSX.Element {
-  const { colorMode } = useColorMode();
-
-  return (
-    <Box overflow="hidden">
-      <Header />
-      {children}
-    </Box>
-  );
+  return <Box overflow="hidden">{children}</Box>;
 }
