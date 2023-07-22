@@ -50,7 +50,7 @@ export default function ContractView(props: Props) {
   }, []);
 
   useEffect(() => {
-    const randomReview = Math.floor(Math.random() * 1000);
+    const randomReview = Math.floor(Math.random() * 10000);
     setReviews(randomReview);
   }, []);
 
@@ -125,7 +125,6 @@ export default function ContractView(props: Props) {
           flexDir={{ base: "column", md: "row" }} // Make it a column on small screens, row on medium screens and above
           justifyContent="space-between" // Spacing between left and right columns
         >
-          {/* Left Column */}
           <Box flex="1" mr={{ base: 0, md: 8 }}>
             <Flex direction="column" alignItems="center" mt={8} gap={3}>
               <NumberAnimation targetValue={reviews} animationDuration={1500} />{" "}
@@ -185,18 +184,16 @@ export default function ContractView(props: Props) {
             </Flex>
           </Box>
         </Box>
-        {/* Right Column */}
-        <Box flex="1" ml={{ base: 0, md: 8 }}>
-          <Stack spacing={4}>
-            <Text
-              fontSize="xl"
-              fontWeight="bold"
-              color={useColorModeValue("gray.100", "gray.100")}
-            >
-              {numberOfTransactions} Transactions
-            </Text>
-          </Stack>
-        </Box>
+
+        <Stack spacing={4}>
+          <Text
+            fontSize="xl"
+            fontWeight="bold"
+            color={useColorModeValue("gray.100", "gray.100")}
+          >
+            {numberOfTransactions} Transactions
+          </Text>
+        </Stack>
       </Box>
     </Flex>
   );
