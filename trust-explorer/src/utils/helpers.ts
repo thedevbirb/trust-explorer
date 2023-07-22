@@ -1,5 +1,11 @@
-import { ethers } from "ethers";
-import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
+import { AbiCoder, ethers } from "ethers";
+import {
+  EAS,
+  SchemaEncoder,
+  ZERO_BYTES32,
+} from "@ethereum-attestation-service/eas-sdk";
+import easabi from "../../public/abis/ensabi.json";
+import { solidityEncode } from "@worldcoin/idkit";
 
 const EAS_CONTRACT_ADDRESS = "0x1a5650D0EcbCa349DD84bAFa85790E3e6955eb84";
 const eas = new EAS(EAS_CONTRACT_ADDRESS);
@@ -9,13 +15,11 @@ export function generateSignal(
   contractAddress: string | null | undefined,
   score: number
 ) {
-  if (!contractAddress || !attester) return;
-  const signal = ethers.AbiCoder.defaultAbiCoder().encode(
+  if (!contractAddress) return;
+  const signal = ethers.solidityPacked(
     ["address", "address", "uint8"],
     [attester, contractAddress, score]
   );
-
-  console.log("signal", signal);
 
   return signal;
 }
@@ -27,8 +31,10 @@ export async function generateAttestation(
   score: number,
   contract: string
 ) {
-  const provider = new ethers.BrowserProvider(window.ethereum); //web3Provider(window.ethereum);
+  const provider = new ethers.BrowserProvider(window.ethereum);
   const signer = await provider.getSigner();
+  console.log("signer", signer);
+  eas.connect(signer as any);
 
   // Initialize SchemaEncoder with the schema string
   const schemaEncoder = new SchemaEncoder(
@@ -42,19 +48,51 @@ export async function generateAttestation(
     { name: "proof", value: proof, type: "bytes" },
   ]);
 
+  console.log("encodedData", encodedData);
+
   const schemaUID =
     "0x983d44f93dfaac4764f1189f3bc04a4cd5e134e1f79b7dd185af10c9c5db3871";
 
-  const tx = await eas.attest({
-    schema: schemaUID,
-    data: {
-      recipient: contract,
-      expirationTime: 0,
-      revocable: true,
-      data: encodedData,
-    },
-  });
-
-  const newAttestationUID = await tx.wait();
-  console.log("New attestation UID:", newAttestationUID);
+  try {
+    // const ciao = await window.ethereum.request({
+    //   method: "eth_sendTransaction",
+    //   params: [
+    //     {
+    //       from: await signer.getAddress(),
+    //       to: EAS_CONTRACT_ADDRESS,
+    //       data: ethers.AbiCoder.defaultAbiCoder().encode(
+    //         ["uint256", "address", "uint256", "bool", "bytes", "uint256"],
+    //         [schemaUID, contract, 0, true, encodedData, 0]
+    //       ),
+    //       gasLimit: "0x186a0",
+    //       gasPrice: "0x4a817c800",
+    //       value: 0,
+    //     },
+    //   ],
+    // });
+    // console.log("ciao", ciao);
+    // const easContract = new ethers.Contract(EAS_CONTRACT_ADDRESS, easabi, signer);
+    // try {
+    //   const realtx = await easContract.attest(
+    //     schemaUID,
+    //     [contract, 0, true, ZERO_BYTES32, encodedData, 0],
+    //     {
+    //       gasLimit: 1000000,
+    //     }
+    //   );
+    //   // const tx = await eas.attest({
+    //   //   schema: schemaUID,
+    //   //   data: {
+    //   //     recipient: contract,
+    //   //     expirationTime: 0,
+    //   //     revocable: true,
+    //   //     data: encodedData,
+    //   //     refUID: ZERO_BYTES32,
+    //   //   },
+    //   // });
+    //   const newAttestationUID = await realtx.wait();
+    //   console.log("New attestation UID:", newAttestationUID);
+  } catch (e) {
+    console.log("error", e);
+  }
 }
