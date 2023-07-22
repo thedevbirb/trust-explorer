@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Box,
   Heading,
@@ -25,12 +25,8 @@ import {
 import { generateAttestation, generateSignal } from "../../utils/helpers";
 import { useMetaMask } from "../../hooks/useMetamask";
 import NumberAnimation from "../../animations/number";
-<<<<<<< HEAD
 import { SubmitReview } from "../SubmitReview";
 import { useAsyncMemo } from "use-async-memo";
-=======
-
->>>>>>> 55761751fcd784ba3d1f6514d4a542235cbc9302
 interface Props {
   contractAddress: string;
 }
@@ -130,15 +126,9 @@ export default function ContractView(props: Props) {
           pb={10}
           color={useColorModeValue("gray.100", "gray.100")}
         >
-<<<<<<< HEAD
           <p>You're viewing contract </p>
-          <a
-            href={`https://goerli-optimism.etherscan.io/address/${contractAddress}`}
-=======
-          <p>You're exploring contract </p>
           <Link
-            href={`https://etherscan.io/address/${contractAddress}`}
->>>>>>> 55761751fcd784ba3d1f6514d4a542235cbc9302
+            href={`https://goerli-optimism.etherscan.io/address/${contractAddress}`}
             target="_blank"
             rel="noopener noreferrer"
             color="blue.100"
@@ -155,14 +145,11 @@ export default function ContractView(props: Props) {
         >
           <Box flex="1" mr={{ base: 0, md: 8 }}>
             <Flex direction="column" alignItems="center" mt={8} gap={3}>
-<<<<<<< HEAD
               <NumberAnimation
-                reviewsCount={reviewsCount}
-                targetValue={reviews}
+                Box={Box}
+                targetValue={reviewsCount}
                 animationDuration={1500}
               />{" "}
-=======
->>>>>>> 55761751fcd784ba3d1f6514d4a542235cbc9302
               {/* Star Rating */}
               <Stack direction="row" spacing={2} align="center">
                 <Text color="white" fontSize="xl" fontWeight="semibold">
@@ -183,7 +170,6 @@ export default function ContractView(props: Props) {
                   />
                 ))}
               </Stack>
-              <NumberAnimation targetValue={reviews} animationDuration={1500} />{" "}
               {rating !== null && (
                 <Box mt={2} fontWeight="bold" fontSize="2xl">
                   {message}
@@ -191,13 +177,8 @@ export default function ContractView(props: Props) {
               )}
               <IDKitWidget
                 app_id="app_eb57bcd2529a2b84af1704d76ab9210c"
-<<<<<<< HEAD
                 action={"attest"}
                 signal={signal}
-=======
-                action={solidityEncode(["uint256"], ["attest"])}
-                signal={generateSignal(state.wallet, contractAddress, 7)}
->>>>>>> 55761751fcd784ba3d1f6514d4a542235cbc9302
                 theme={colorMode}
                 onSuccess={async (proof: ISuccessResult) => {
                   await generateAttestation(
@@ -212,27 +193,11 @@ export default function ContractView(props: Props) {
                 enableTelemetry
               >
                 {({ open }) => (
-<<<<<<< HEAD
                   <SubmitReview
                     open={open}
                     selectedRating={selectedRating}
                     setSelectedRating={setSelectedRating}
                   />
-=======
-                  <Button
-                    leftIcon={<FiEdit2 />}
-                    bg={"blue.100"}
-                    isLoading={isLoading}
-                    color={"purple.700"}
-                    loadingText="Submitting review"
-                    onClick={async () => {
-                      open();
-                      await handleClick();
-                    }}
-                  >
-                    I want to add a review
-                  </Button>
->>>>>>> 55761751fcd784ba3d1f6514d4a542235cbc9302
                 )}
               </IDKitWidget>
             </Flex>
