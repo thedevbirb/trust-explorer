@@ -29,6 +29,7 @@ export function handleAttested(event: AttestedEvent): void {
     const easContract = EAS.bind(event.address);
     const attestation = easContract.getAttestation(event.params.uid);
 
+    const recipient = attestation.recipient;
     const decoded = ethereum
       .decode("(uint8,uint256,uint256,uint256[8])", attestation.data)!
       .toTuple();
@@ -36,7 +37,7 @@ export function handleAttested(event: AttestedEvent): void {
     entity.score = score;
     entity.save();
 
-    let contract = getContractOrCreate(event.address);
+    let contract = getContractOrCreate(recipient);
     const count = contract.attestationsCount + 1;
     const sum = contract.scoreSum + score;
     contract.attestationsCount = count;
