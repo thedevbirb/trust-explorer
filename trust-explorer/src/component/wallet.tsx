@@ -37,7 +37,7 @@ export default function Wallet() {
   return (
     <Box
       p={2}
-      bgGradient="linear(to-r, green.200, pink.500)"
+      bgGradient="linear(to-r, blue.700, blue.500)"
       margin={"auto"}
       width={"fit-content"}
       cursor={"pointer"}
@@ -52,9 +52,6 @@ export default function Wallet() {
         >
           {isConnected ? wallet : "Connect Wallet"}
         </Text>
-        {isConnected && (
-          <Image alt="waifu-connect" src="/waifu.png" width={18} height={6} />
-        )}
       </Flex>
     </Box>
   );
