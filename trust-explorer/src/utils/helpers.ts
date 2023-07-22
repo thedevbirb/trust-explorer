@@ -1,14 +1,7 @@
-import { AbiCoder, ethers } from "ethers";
-import {
-  EAS,
-  SchemaEncoder,
-  ZERO_BYTES32,
-} from "@ethereum-attestation-service/eas-sdk";
-import easabi from "../../public/abis/ensabi.json";
-import { solidityEncode } from "@worldcoin/idkit";
+import { ethers } from "ethers";
+import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 
 const EAS_CONTRACT_ADDRESS = "0x1a5650D0EcbCa349DD84bAFa85790E3e6955eb84";
-const eas = new EAS(EAS_CONTRACT_ADDRESS);
 
 export function generateSignal(
   attester: string,
@@ -48,7 +41,6 @@ export async function generateAttestation(
 
   const schemaUID =
     "0xfd1d09737b6a97b7feae8d388f71e17b8dec6cb19d10ab6fef6bc337859cdb2b";
-  //"0x983d44f93dfaac4764f1189f3bc04a4cd5e134e1f79b7dd185af10c9c5db3871";
 
   try {
     const tx = await window.ethereum.request({
