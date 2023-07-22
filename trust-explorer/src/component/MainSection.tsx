@@ -37,11 +37,12 @@ export default function MainSection() {
           <SearchComponent handleSearchAddress={handleSearchAddress} />
           <Box w="300px" h="300px" color="red">
             <IDKitWidget
-              app_id="app_staging_c14ad286ca4a387753b137a0d357085f"
+              app_id="app_eb57bcd2529a2b84af1704d76ab9210c"
               action="attest"
               signal={generateSignal()}
               theme={colorMode}
               onSuccess={async (proof: ISuccessResult) => {
+                console.log("hello!");
                 await generateAttestation(
                   proof.merkle_root,
                   proof.proof,

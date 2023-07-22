@@ -13,11 +13,13 @@ import {
 
 import Image from "next/image";
 import Wallet from "./wallet";
+import { Router, useRouter } from "next/router";
 
 // --- Components ---
 const SearchHistoryComponent = dynamic(() => import("./SearchHistory"));
 const ThemeButtonComponent = dynamic(() => import("./ThemeButton"));
 export default function Header() {
+  const router = useRouter();
   const buttonStyleProps:
     | ComponentDefaultProps
     | ComponentWithAs<"button", IconButtonProps> = {
@@ -27,6 +29,7 @@ export default function Header() {
     boxShadow: "xl",
     _hover: { backgroundColor: useColorModeValue("gray.700", "gray.200") },
   };
+
   return (
     <Flex
       bgGradient="linear(to-r,blue.200,blue.800)"
@@ -45,7 +48,13 @@ export default function Header() {
         left={[4, 10]}
         zIndex="overlay"
       >
-        <Image src={"/logo.png"} alt={"Logo"} width={220} height={0} />
+        <Image
+          src={"/logo.png"}
+          alt={"Logo"}
+          width={220}
+          height={0}
+          onClick={() => router.push("/")}
+        />
       </Box>
       <Box
         _dark={{ display: "flex" }}
@@ -57,7 +66,13 @@ export default function Header() {
         left={[4, 10]}
         zIndex="overlay"
       >
-        <Image src={"/darkest-logo.png"} alt={"Logo"} width={220} height={0} />
+        <Image
+          src={"/darkest-logo.png"}
+          alt={"Logo"}
+          width={220}
+          height={0}
+          onClick={() => router.push("/")}
+        />
       </Box>
       <Flex
         gap={4}
