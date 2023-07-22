@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import {
   Box,
   Button,
-  Container,
   Heading,
   Stack,
   Flex,
@@ -15,17 +14,12 @@ import {
 } from "@chakra-ui/react";
 import { FiEdit2, FiStar } from "react-icons/fi";
 
-import Header from "../Header";
-
-import { useAsyncMemo } from "use-async-memo";
-
 import { useGraph } from "../../hooks/useGraph";
 interface Props {
   contractAddress: string;
 }
 import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
 import { generateAttestation, generateSignal } from "../../utils/helpers";
-import { useRouter } from "next/router";
 import { useMetaMask } from "../../hooks/useMetamask";
 
 export default function ContractView(props: Props) {
@@ -160,19 +154,6 @@ export default function ContractView(props: Props) {
             {message}
           </Stack>
 
-          <Button
-            leftIcon={<FiEdit2 />}
-            isLoading={isLoading}
-            loadingText="Submitting review"
-            onClick={handleClick}
-            color="white"
-            bg="brand.700"
-            mt={4}
-          >
-            Review
-          </Button>
-        </Flex>
-        <Box w="300px" h="50px" bgColor="blue.500" color="white" rounded={"md"}>
           <IDKitWidget
             app_id="app_eb57bcd2529a2b84af1704d76ab9210c"
             action="attest"
@@ -193,9 +174,25 @@ export default function ContractView(props: Props) {
             credential_types={[CredentialType.Orb, CredentialType.Phone]}
             enableTelemetry
           >
-            {({ open }) => <button onClick={open}>Verify with World ID</button>}
+            {({ open }) => (
+              <Button
+                leftIcon={<FiEdit2 />}
+                isLoading={isLoading}
+                loadingText="Submitting review"
+                onClick={async () => {
+                  open();
+                  await handleClick();
+                }}
+                color="white"
+                bg="brand.700"
+                mt={4}
+                mb={4}
+              >
+                Review
+              </Button>
+            )}
           </IDKitWidget>
-        </Box>
+        </Flex>
       </Box>
     </Flex>
   );
