@@ -143,7 +143,7 @@ export default function ContractView(props: Props) {
               <NumberAnimation
                 Box={Box}
                 targetValue={reviewsCount}
-                animationDuration={1500}
+                animationDuration={20}
               />{" "}
               {/* Star Rating */}
               <Stack direction="row" spacing={2} align="center">
