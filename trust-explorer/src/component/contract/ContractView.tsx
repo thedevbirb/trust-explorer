@@ -10,7 +10,12 @@ import Header from "../Header";
 import React from "react";
 import { FiEdit2 } from "react-icons/fi";
 import { useGraph } from "../../hooks/useGraph";
-import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
+import {
+  CredentialType,
+  IDKitWidget,
+  ISuccessResult,
+  solidityEncode,
+} from "@worldcoin/idkit";
 import { generateAttestation, generateSignal } from "../../utils/helpers";
 import { useMetaMask } from "../../hooks/useMetamask";
 interface Props {
@@ -69,15 +74,16 @@ export default function ContractView(props: Props) {
         <Box w="300px" h="50px" bgColor="blue.500" color="white" rounded={"md"}>
           <IDKitWidget
             app_id="app_eb57bcd2529a2b84af1704d76ab9210c"
-            action="attest"
-            signal={generateSignal(state.wallet, address, 7)}
+            action={solidityEncode(["uint256"], ["attest"])}
+            signal={generateSignal(state.wallet, contractAddress, 7)}
             theme={colorMode}
             onSuccess={async (proof: ISuccessResult) => {
-              console.log("hello!");
               await generateAttestation(
                 proof.merkle_root,
                 proof.proof,
-                proof.nullifier_hash
+                proof.nullifier_hash,
+                7,
+                contractAddress
               );
             }}
             credential_types={[CredentialType.Orb, CredentialType.Phone]}
