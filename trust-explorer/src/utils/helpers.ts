@@ -30,14 +30,14 @@ export async function generateAttestation(
 
   // Initialize SchemaEncoder with the schema string
   const schemaEncoder = new SchemaEncoder(
-    "uint8 score,uint256 root,uint256 nullifierHash,uint256[8] memory proof"
+    "uint8 score,uint256 root,uint256 nullifierHash,bytes memory proof"
   );
 
   const encodedData = schemaEncoder.encodeData([
     { name: "score", value: 7, type: "uint8" },
     { name: "root", value: root, type: "uint256" },
     { name: "nullifierHash", value: nullifierHash, type: "uint256" },
-    { name: "proof", value: proof, type: "uint256[8] memory proof" },
+    { name: "proof", value: proof, type: "bytes" },
   ]);
 
   const schemaUID =
