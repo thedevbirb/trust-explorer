@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 
 import Image from "next/image";
+import Wallet from "../pages/wallet";
 
 // --- Components ---
 const SearchHistoryComponent = dynamic(() => import("./SearchHistory"));
