@@ -5,8 +5,8 @@ const EAS_CONTRACT_ADDRESS = "0x1a5650D0EcbCa349DD84bAFa85790E3e6955eb84";
 const eas = new EAS(EAS_CONTRACT_ADDRESS);
 
 export function generateSignal() {
-  const attester = ""; // USER ADDRESS
-  const contract = ""; // CONTRACT ADDRESS
+  const attester = "0x1a5650D0EcbCa349DD84bAFa85790E3e6955eb84"; // USER ADDRESS
+  const contract = "0x1a5650D0EcbCa349DD84bAFa85790E3e6955eb84"; // CONTRACT ADDRESS
   const score = 7; // SCORE
 
   return ethers.AbiCoder.defaultAbiCoder().encode(
