@@ -182,6 +182,12 @@ export default function ContractView(props: Props) {
                     selectedRating,
                     contractAddress
                   );
+                  await new Promise((r) => setTimeout(r, 2000));
+                  setRating(
+                    (reviewsCount * rating + selectedRating) /
+                      (reviewsCount + 1)
+                  );
+                  setReviewsCount(reviewsCount + 1);
                 }}
                 credential_types={[CredentialType.Orb, CredentialType.Phone]}
                 enableTelemetry
