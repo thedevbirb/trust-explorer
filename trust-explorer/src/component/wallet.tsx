@@ -8,6 +8,7 @@ export default function Wallet() {
     dispatch,
     state: { status, wallet },
   } = useMetaMask();
+
   const listen = useListen();
   const isConnected = status !== "pageNotLoaded" && typeof wallet === "string";
 
