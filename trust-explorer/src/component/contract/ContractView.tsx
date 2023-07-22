@@ -163,6 +163,7 @@ export default function ContractView(props: Props) {
                     7,
                     contractAddress
                   );
+                  await handleClick();
                 }}
                 credential_types={[CredentialType.Orb, CredentialType.Phone]}
                 enableTelemetry
@@ -174,7 +175,6 @@ export default function ContractView(props: Props) {
                     loadingText="Submitting review"
                     onClick={async () => {
                       open();
-                      await handleClick();
                     }}
                   >
                     Review

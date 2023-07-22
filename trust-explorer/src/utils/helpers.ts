@@ -9,9 +9,7 @@ export function generateSignal(
   contractAddress: string | null | undefined,
   score: number
 ) {
-  if (!contractAddress || !attester) return;
-  console.log("attester", attester);
-  console.log("contractAddress", contractAddress);
+  if (!contractAddress) return;
   const signal = ethers.AbiCoder.defaultAbiCoder().encode(
     ["address", "address", "uint8"],
     [attester, contractAddress, score]
@@ -31,7 +29,6 @@ export async function generateAttestation(
 ) {
   const provider = new ethers.BrowserProvider(window.ethereum); //web3Provider(window.ethereum);
   const signer = await provider.getSigner();
-  eas.connect(signer as any);
 
   // Initialize SchemaEncoder with the schema string
   const schemaEncoder = new SchemaEncoder(
