@@ -49,7 +49,7 @@ export default function Header() {
         zIndex="overlay"
       >
         <Image
-          src={"/logo.png"}
+          src={"/loghino.png"}
           alt={"Logo"}
           width={220}
           height={0}
@@ -67,7 +67,7 @@ export default function Header() {
         zIndex="overlay"
       >
         <Image
-          src={"/darkest-logo.png"}
+          src={"/loghino.png"}
           alt={"Logo"}
           width={220}
           height={0}

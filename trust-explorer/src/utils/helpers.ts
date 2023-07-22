@@ -15,7 +15,7 @@ export function generateSignal(
   contractAddress: string | null | undefined,
   score: number
 ) {
-  if (!contractAddress) return;
+  if (!contractAddress || !attester) return;
   const signal = ethers.solidityPacked(
     ["address", "address", "uint8"],
     [attester, contractAddress, score]

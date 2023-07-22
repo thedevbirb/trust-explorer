@@ -36,7 +36,7 @@ export default function NumberAnimation(props: Props) {
 
   return (
     <Box color="white" fontSize="2xl" fontWeight="bold">
-      {Math.round(count)} Reviews By Users
+      {Math.round(count)} reviews by users
     </Box>
   );
 }
