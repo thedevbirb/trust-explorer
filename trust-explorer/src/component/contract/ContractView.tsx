@@ -148,7 +148,7 @@ export default function ContractView(props: Props) {
               {/* Star Rating */}
               <Stack direction="row" spacing={2} align="center">
                 <Text color="white" fontSize="xl" fontWeight="semibold">
-                  {rating === null ? "No Rating" : `${rating}/10`}
+                  {rating === null ? "No Rating" : `${rating.toFixed(1)}/10`}
                 </Text>
                 {Array.from({ length: 10 }, (_, index) => (
                   <Icon
