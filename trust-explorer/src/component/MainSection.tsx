@@ -12,7 +12,6 @@ import MotionContainer from "./MotionContainer";
 // -- Animations --
 import { slide } from "../animations";
 import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
-import { useMemo } from "react";
 import { generateAttestation, generateSignal } from "../utils/helpers";
 import { useMetaMask } from "../hooks/useMetamask";
 
@@ -25,8 +24,6 @@ export default function MainSection() {
   const handleSearchAddress = (address?: string) => {
     router.push(address);
   };
-
-  console.log("state", state);
 
   return (
     <>
