@@ -8,7 +8,7 @@ export default function Hero() {
         align={"center"}
         spacing={{ base: 8, md: 10 }}
         pb={{ base: 1, md: 2 }}
-        pt={{ base: 2, md: 10 }}
+        pt={{ base: 2, md: 40 }}
       >
         <Heading
           fontWeight={600}
