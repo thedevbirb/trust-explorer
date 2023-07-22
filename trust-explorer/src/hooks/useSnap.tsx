@@ -1,4 +1,6 @@
 import detectEthereumProvider from "@metamask/detect-provider";
+export const defaultSnapOrigin =
+  process.env.SNAP_ORIGIN ?? `local:http://localhost:8080`;
 
 export const useSnap = () => {
   async function detectSnap() {
@@ -20,7 +22,20 @@ export const useSnap = () => {
     }
   }
 
+  const connectSnap = async (
+    snapId: string = defaultSnapOrigin,
+    params: Record<"version" | string, unknown> = {}
+  ) => {
+    await window.ethereum.request({
+      method: "wallet_requestSnaps",
+      params: {
+        [snapId]: params,
+      },
+    });
+  };
+
   return {
     detectSnap,
+    connectSnap,
   };
 };
