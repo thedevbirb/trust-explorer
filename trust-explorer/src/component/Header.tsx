@@ -39,6 +39,7 @@ export default function Header() {
       <Box
         _dark={{ display: "none" }}
         _light={{ display: "flex" }}
+        cursor="pointer"
         gap={4}
         height=""
         position="absolute"
@@ -59,6 +60,7 @@ export default function Header() {
         _light={{ display: "none" }}
         gap={4}
         height=""
+        cursor="pointer"
         position="absolute"
         top={[1, 5]}
         left={[4, 10]}
