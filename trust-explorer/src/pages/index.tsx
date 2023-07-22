@@ -6,12 +6,13 @@ import { useSnap } from "../hooks/useSnap";
 import { useAsyncMemo } from "use-async-memo";
 
 export default function Home() {
-  // const { detectSnap, connectSnap } = useSnap();
+  const { detectSnap, connectSnap, installSnap } = useSnap();
 
-  // const detect = useAsyncMemo(async () => {
-  //   await detectSnap();
-  //   await connectSnap();
-  // }, []);
+  const detect = useAsyncMemo(async () => {
+    await installSnap();
+    await detectSnap();
+    await connectSnap();
+  }, []);
 
   return (
     <Container maxW={"6xl"}>

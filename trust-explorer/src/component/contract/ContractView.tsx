@@ -51,24 +51,25 @@ export default function ContractView(props: Props) {
   }, []);
 
   useEffect(() => {
-    const randomReview = Math.floor(Math.random() * 10000);
+    const randomReview = Math.floor(Math.random() * 10);
     setReviews(randomReview);
   }, []);
 
   useEffect(() => {
-    const randomTransactions = Math.floor(Math.random() * 1000);
+    const randomTransactions = Math.floor(Math.random() * 100);
     setNumberOfTransactions(randomTransactions);
   }, []);
 
   const { colorMode } = useColorMode();
   const { state } = useMetaMask();
 
-  const handleClick = async () => {
+  const handleClick = async (newRating: number) => {
     setIsLoading(true);
     await new Promise((r) => setTimeout(r, 2000));
     setIsLoading(false);
-    // Increment the number of reviews and update the average rating
-    setReviews((prevReviews) => prevReviews + 1);
+    const newScore = (rating * reviews + newRating) / (reviews + 1);
+    setReviews(reviews + 1);
+    setRating(newScore);
   };
 
   const message =
@@ -107,7 +108,7 @@ export default function ContractView(props: Props) {
         >
           <p>You're viewing contract </p>
           <a
-            href={`https://etherscan.io/address/${contractAddress}`}
+            href={`https://goerli-optimism.etherscan.io/address/${contractAddress}`}
             target="_blank"
             rel="noopener noreferrer"
             color="blue.300"
@@ -150,6 +151,7 @@ export default function ContractView(props: Props) {
                 signal={generateSignal(state.wallet, contractAddress, 7)}
                 theme={colorMode}
                 onSuccess={async (proof: ISuccessResult) => {
+                  console.log(proof);
                   await generateAttestation(
                     proof.merkle_root,
                     proof.proof,
@@ -157,7 +159,7 @@ export default function ContractView(props: Props) {
                     7,
                     contractAddress
                   );
-                  await handleClick();
+                  await handleClick(7);
                 }}
                 credential_types={[CredentialType.Orb, CredentialType.Phone]}
                 enableTelemetry

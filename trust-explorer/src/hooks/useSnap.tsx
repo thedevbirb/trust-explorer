@@ -33,8 +33,14 @@ export const useSnap = () => {
       },
     });
   };
+  const installSnap = async () => {
+    await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+  };
 
   return {
+    installSnap,
     detectSnap,
     connectSnap,
   };
