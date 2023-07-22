@@ -6,10 +6,11 @@ import { useSnap } from "../hooks/useSnap";
 import { useAsyncMemo } from "use-async-memo";
 
 export default function Home() {
-  // const { detectSnap } = useSnap();
+  // const { detectSnap, connectSnap } = useSnap();
 
   // const detect = useAsyncMemo(async () => {
   //   await detectSnap();
+  //   await connectSnap();
   // }, []);
 
   return (

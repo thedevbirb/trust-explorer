@@ -8,6 +8,7 @@ import {
   Flex,
   IconButtonProps,
   useColorMode,
+  Button,
   useColorModeValue,
 } from "@chakra-ui/react";
 
