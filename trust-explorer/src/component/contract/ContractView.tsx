@@ -26,6 +26,7 @@ import {
 import { generateAttestation, generateSignal } from "../../utils/helpers";
 import { useMetaMask } from "../../hooks/useMetamask";
 import NumberAnimation from "../../animations/number";
+import { SubmitReview } from "../SubmitReview";
 interface Props {
   contractAddress: string;
 }
@@ -68,11 +69,6 @@ export default function ContractView(props: Props) {
     setIsLoading(false);
     // Increment the number of reviews and update the average rating
     setReviews((prevReviews) => prevReviews + 1);
-  };
-
-  // Function to handle user rating
-  const handleRating = (value: number) => {
-    setRating(value);
   };
 
   const message =
@@ -140,8 +136,6 @@ export default function ContractView(props: Props) {
                     color={index < (rating ?? 0) ? "blue.200" : "gray.300"}
                     fill={index < (rating ?? 0) ? "blue.200" : "transparent"}
                     boxSize={6}
-                    cursor="pointer"
-                    onClick={() => handleRating(index + 1)}
                   />
                 ))}
               </Stack>
@@ -167,19 +161,7 @@ export default function ContractView(props: Props) {
                 credential_types={[CredentialType.Orb, CredentialType.Phone]}
                 enableTelemetry
               >
-                {({ open }) => (
-                  <Button
-                    leftIcon={<FiEdit2 />}
-                    isLoading={isLoading}
-                    loadingText="Submitting review"
-                    onClick={async () => {
-                      open();
-                      await handleClick();
-                    }}
-                  >
-                    Review
-                  </Button>
-                )}
+                {({ open }) => <SubmitReview />}
               </IDKitWidget>
             </Flex>
           </Box>
