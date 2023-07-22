@@ -2,14 +2,16 @@ import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
 import { extendTheme } from "@chakra-ui/react";
 import { MetaMaskSDK } from "@metamask/sdk";
+import { MetaMaskProvider, useMetaMask } from "../hooks/useMetamask";
+import { SdkLayout } from "../component/SdkProvider";
 
-export const MMSDK = new MetaMaskSDK({
-  dappMetadata: {
-    name: "Trust Explorer",
-    url: "https://trustexplorer.io/favicon.ico",
-  },
-});
-export const ethereum = MMSDK.getProvider();
+// export const MMSDK = new MetaMaskSDK({
+//   dappMetadata: {
+//     name: "Trust Explorer",
+//     url: "https://trustexplorer.io/favicon.ico",
+//   },
+// });
+// export const ethereum = MMSDK.getProvider();
 const colors = {
   brand: {
     900: "#1a365d",
@@ -28,8 +30,12 @@ export const theme = extendTheme({
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ChakraProvider theme={theme}>
-      <Component {...pageProps} />
-    </ChakraProvider>
+    <MetaMaskProvider>
+      <SdkLayout>
+        <ChakraProvider theme={theme}>
+          <Component {...pageProps} />
+        </ChakraProvider>
+      </SdkLayout>
+    </MetaMaskProvider>
   );
 }
