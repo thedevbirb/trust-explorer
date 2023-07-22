@@ -7,7 +7,7 @@ import Header from "../component/Header";
 
 const colors = {
   brand: {
-    900: "#1a365d",
+    900: "#11365d",
     800: "#153e75",
     700: "#2a69ac",
   },
