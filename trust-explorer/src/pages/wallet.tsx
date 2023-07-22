@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import { useMetaMask } from "../hooks/useMetamask";
 import { useListen } from "../hooks/useListen";
 import Image from "next/image";
+import { instantiateSdk } from "../lib/metamaskSDK";
 
 export default function Wallet({ Component, pageProps }: AppProps) {
   const {
