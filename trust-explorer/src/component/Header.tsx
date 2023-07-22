@@ -15,8 +15,6 @@ import Image from "next/image";
 import Wallet from "./wallet";
 import { Router, useRouter } from "next/router";
 
-// --- Components ---
-const SearchHistoryComponent = dynamic(() => import("./SearchHistory"));
 const ThemeButtonComponent = dynamic(() => import("./ThemeButton"));
 export default function Header() {
   const router = useRouter();
@@ -83,7 +81,6 @@ export default function Header() {
         zIndex="overlay"
       >
         <Wallet />
-        <SearchHistoryComponent styleProps={buttonStyleProps} />
 
         <ThemeButtonComponent styleProps={buttonStyleProps} />
       </Flex>
