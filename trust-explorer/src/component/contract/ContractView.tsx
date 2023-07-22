@@ -9,15 +9,12 @@ import {
 import Header from "../Header";
 import React from "react";
 import { FiEdit2 } from "react-icons/fi";
-import { useAsyncMemo } from "use-async-memo";
 import { useGraph } from "../../hooks/useGraph";
-import { useMetaMask } from "../../hooks/useMetamask";
 interface Props {
   contractAddress: string;
 }
 import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
 import { generateAttestation, generateSignal } from "../../utils/helpers";
-import { useRouter } from "next/router";
 import { useMetaMask } from "../../hooks/useMetamask";
 
 export default function ContractView(props: Props) {
@@ -29,7 +26,6 @@ export default function ContractView(props: Props) {
   const { queryAttestation } = useGraph();
   const [isLoading, setIsLoading] = React.useState(false);
   const { colorMode } = useColorMode();
-  const router = useRouter();
   const { state } = useMetaMask();
 
   const handleClick = async () => {
@@ -76,7 +72,7 @@ export default function ContractView(props: Props) {
             action="attest"
             signal={generateSignal(
               state.wallet || "0xc2e9A90a9B957c4687c5944491f86E29C10Cb439",
-              address,
+              contractAddress,
               7
             )}
             theme={colorMode}
