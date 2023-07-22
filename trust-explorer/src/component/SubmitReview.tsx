@@ -22,7 +22,6 @@ export const SubmitReview = (props: {
   setSelectedRating: (arg1: number) => void;
 }) => {
   const { open } = props;
-  const router = useRouter();
   const { onClose } = useDisclosure();
   const [rating, setRating] = useState<number | null>(null);
 

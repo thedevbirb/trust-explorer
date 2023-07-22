@@ -44,12 +44,7 @@ export default function ContractView(props: Props) {
   const [selectedRating, setSelectedRating] = React.useState<number | null>(
     null
   );
-  const [reviews, setReviews] = React.useState<number>(null);
   const [activeStars, setActiveStars] = React.useState(0);
-
-  const [numberOfTransactions, setNumberOfTransactions] = React.useState<
-    number | null
-  >(null);
 
   const signal = useMemo(() => {
     if (!wallet || !contractAddress || !selectedRating) return;
@@ -62,11 +57,6 @@ export default function ContractView(props: Props) {
     setReviewsCount(res[0].attestationsCount);
     setRating(Number(res[0].scoreAvg));
   }, [contractAddress]);
-
-  useEffect(() => {
-    const randomTransactions = Math.floor(Math.random() * 100);
-    setNumberOfTransactions(randomTransactions);
-  }, []);
 
   const { colorMode } = useColorMode();
   const { state } = useMetaMask();
