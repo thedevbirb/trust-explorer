@@ -20,12 +20,11 @@ export const SubmitReview = (props: {
   selectedRating: number;
   setSelectedRating: (arg1: number) => void;
 }) => {
-  const { open } = props;
+  const { open, setSelectedRating, selectedRating } = props;
   const { onClose } = useDisclosure();
-  const [rating, setRating] = useState<number | null>(null);
 
   const handleRating = (rating: number) => {
-    setRating(rating);
+    setSelectedRating(rating);
   };
   return (
     <Popover isLazy onClose={onClose} returnFocusOnClose={false}>
@@ -41,14 +40,16 @@ export const SubmitReview = (props: {
         <PopoverBody>
           <Stack direction="row" spacing={2} align="center">
             <Text fontSize="xl" fontWeight="semibold" minWidth={50}>
-              {rating === null ? "0/10" : `${rating}/10`}
+              {selectedRating === null ? "0/10" : `${selectedRating}/10`}
             </Text>
             {Array.from({ length: 10 }, (_, index) => (
               <Icon
                 key={index}
                 as={FiStar}
-                color={index < (rating ?? 0) ? "blue.200" : "gray.300"}
-                fill={index < (rating ?? 0) ? "blue.200" : "transparent"}
+                color={index < (selectedRating ?? 0) ? "blue.200" : "gray.300"}
+                fill={
+                  index < (selectedRating ?? 0) ? "blue.200" : "transparent"
+                }
                 boxSize={6}
                 cursor="pointer"
                 onClick={() => handleRating(index + 1)}
