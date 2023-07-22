@@ -15,14 +15,15 @@ import { FiEdit2, FiStar } from "react-icons/fi";
 import Header from "../Header";
 
 import { useAsyncMemo } from "use-async-memo";
+
 import { useGraph } from "../../hooks/useGraph";
-import { useMetaMask } from "../../hooks/useMetamask";
 interface Props {
   contractAddress: string;
 }
 import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
 import { generateAttestation, generateSignal } from "../../utils/helpers";
 import { useRouter } from "next/router";
+import { useMetaMask } from "../../hooks/useMetamask";
 
 export default function ContractView(props: Props) {
   const { contractAddress } = props;
@@ -45,7 +46,6 @@ export default function ContractView(props: Props) {
     setReviews(randomReview);
   }, []);
   const { colorMode } = useColorMode();
-  const router = useRouter();
   const { state } = useMetaMask();
 
   const handleClick = async () => {
