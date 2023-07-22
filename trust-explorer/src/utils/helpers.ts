@@ -4,15 +4,21 @@ import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 const EAS_CONTRACT_ADDRESS = "0x1a5650D0EcbCa349DD84bAFa85790E3e6955eb84";
 const eas = new EAS(EAS_CONTRACT_ADDRESS);
 
-export function generateSignal() {
-  const attester = "0x1a5650D0EcbCa349DD84bAFa85790E3e6955eb84"; // USER ADDRESS
-  const contract = "0x1a5650D0EcbCa349DD84bAFa85790E3e6955eb84"; // CONTRACT ADDRESS
-  const score = 7; // SCORE
-
-  return ethers.AbiCoder.defaultAbiCoder().encode(
+export function generateSignal(
+  attester: string,
+  contractAddress: string | null | undefined,
+  score: number
+) {
+  console.log("inside generate signal");
+  if (!contractAddress) return;
+  const signal = ethers.AbiCoder.defaultAbiCoder().encode(
     ["address", "address", "uint8"],
-    [attester, contract, score]
+    [attester, contractAddress, score]
   );
+
+  console.log("signal", signal);
+
+  return signal;
 }
 
 export async function generateAttestation(
@@ -20,18 +26,19 @@ export async function generateAttestation(
   proof: string,
   nullifierHash: string
 ) {
-  // TODO:: eas.connect(signer)
+  const provider = new ethers.BrowserProvider(window.ethereum); //web3Provider(window.ethereum);
+  //eas.connect(signer);
 
   // Initialize SchemaEncoder with the schema string
   const schemaEncoder = new SchemaEncoder(
-    "uint8 score,uint256 root,uint256 nullifierHash,uint256[8] memory proof"
+    "uint8 score,uint256 root,uint256 nullifierHash,bytes memory proof"
   );
 
   const encodedData = schemaEncoder.encodeData([
     { name: "score", value: 7, type: "uint8" },
     { name: "root", value: root, type: "uint256" },
     { name: "nullifierHash", value: nullifierHash, type: "uint256" },
-    { name: "proof", value: proof, type: "uint256[8] memory proof" },
+    { name: "proof", value: proof, type: "bytes" },
   ]);
 
   const schemaUID =

@@ -8,15 +8,29 @@ import {
   Flex,
   Icon,
   Text,
+  useColorMode,
 } from "@chakra-ui/react";
 import { FiEdit2, FiStar } from "react-icons/fi";
 
+import Header from "../Header";
+
+import { useAsyncMemo } from "use-async-memo";
+import { useGraph } from "../../hooks/useGraph";
+import { useMetaMask } from "../../hooks/useMetamask";
 interface Props {
-  address: string;
+  contractAddress: string;
 }
+import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
+import { generateAttestation, generateSignal } from "../../utils/helpers";
+import { useRouter } from "next/router";
 
 export default function ContractView(props: Props) {
-  const { address } = props;
+  const { contractAddress } = props;
+  const {
+    state: { wallet },
+  } = useMetaMask();
+
+  const { queryAttestation } = useGraph();
   const [isLoading, setIsLoading] = React.useState(false);
   const [rating, setRating] = React.useState<number | null>(Math.floor(null)); // Add state to store the user's rating
   const [reviews, setReviews] = React.useState<number>(null);
@@ -30,6 +44,9 @@ export default function ContractView(props: Props) {
     const randomReview = Math.floor(Math.random() * 1000);
     setReviews(randomReview);
   }, []);
+  const { colorMode } = useColorMode();
+  const router = useRouter();
+  const { state } = useMetaMask();
 
   const handleClick = async () => {
     setIsLoading(true);
@@ -90,7 +107,7 @@ export default function ContractView(props: Props) {
           color={"white"}
           textAlign={"center"}
         >
-          Your viewing contract {address}
+          Your viewing contract {contractAddress}
         </Heading>
         <Flex direction="column" alignItems="center" mt={8}>
           <Text color="white" fontSize="xl" fontWeight="bold">
@@ -138,6 +155,31 @@ export default function ContractView(props: Props) {
             Review
           </Button>
         </Flex>
+
+        <Box w="300px" h="50px" bgColor="blue.500" color="white" rounded={"md"}>
+          <IDKitWidget
+            app_id="app_eb57bcd2529a2b84af1704d76ab9210c"
+            action="attest"
+            signal={generateSignal(
+              state.wallet || "0xc2e9A90a9B957c4687c5944491f86E29C10Cb439",
+              contractAddress,
+              7
+            )}
+            theme={colorMode}
+            onSuccess={async (proof: ISuccessResult) => {
+              console.log("hello!");
+              await generateAttestation(
+                proof.merkle_root,
+                proof.proof,
+                proof.nullifier_hash
+              );
+            }}
+            credential_types={[CredentialType.Orb, CredentialType.Phone]}
+            enableTelemetry
+          >
+            {({ open }) => <button onClick={open}>Verify with World ID</button>}
+          </IDKitWidget>
+        </Box>
       </Container>
     </Box>
   );

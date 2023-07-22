@@ -31,8 +31,14 @@ export default function Header() {
   };
 
   return (
-    <div>
-      <Flex
+    <Flex
+      bgGradient="linear(to-r,blue.200,blue.800)"
+      borderBottom={"3px"}
+      width={"100%"}
+      height={"fit-content"}
+      borderColor="black"
+    >
+      <Box
         _dark={{ display: "none" }}
         _light={{ display: "flex" }}
         gap={4}
@@ -49,8 +55,8 @@ export default function Header() {
           height={0}
           onClick={() => router.push("/")}
         />
-      </Flex>
-      <Flex
+      </Box>
+      <Box
         _dark={{ display: "flex" }}
         _light={{ display: "none" }}
         gap={4}
@@ -67,7 +73,7 @@ export default function Header() {
           height={0}
           onClick={() => router.push("/")}
         />
-      </Flex>
+      </Box>
       <Flex
         gap={4}
         height=""
@@ -81,6 +87,6 @@ export default function Header() {
 
         <ThemeButtonComponent styleProps={buttonStyleProps} />
       </Flex>
-    </div>
+    </Flex>
   );
 }
