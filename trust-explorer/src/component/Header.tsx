@@ -28,8 +28,14 @@ export default function Header() {
     _hover: { backgroundColor: useColorModeValue("gray.700", "gray.200") },
   };
   return (
-    <div>
-      <Flex
+    <Flex
+      bgGradient="linear(to-r,blue.200,blue.800)"
+      borderBottom={"3px"}
+      width={"100%"}
+      height={"fit-content"}
+      borderColor="black"
+    >
+      <Box
         _dark={{ display: "none" }}
         _light={{ display: "flex" }}
         gap={4}
@@ -40,8 +46,8 @@ export default function Header() {
         zIndex="overlay"
       >
         <Image src={"/logo.png"} alt={"Logo"} width={220} height={0} />
-      </Flex>
-      <Flex
+      </Box>
+      <Box
         _dark={{ display: "flex" }}
         _light={{ display: "none" }}
         gap={4}
@@ -52,7 +58,7 @@ export default function Header() {
         zIndex="overlay"
       >
         <Image src={"/darkest-logo.png"} alt={"Logo"} width={220} height={0} />
-      </Flex>
+      </Box>
       <Flex
         gap={4}
         height=""
@@ -66,6 +72,6 @@ export default function Header() {
 
         <ThemeButtonComponent styleProps={buttonStyleProps} />
       </Flex>
-    </div>
+    </Flex>
   );
 }
