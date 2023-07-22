@@ -42,12 +42,7 @@ export const SubmitReview = (props: {
         <PopoverCloseButton />
         <PopoverBody>
           <Stack direction="row" spacing={2} align="center">
-            <Text
-              color="white"
-              fontSize="xl"
-              fontWeight="semibold"
-              minWidth={50}
-            >
+            <Text fontSize="xl" fontWeight="semibold" minWidth={50}>
               {rating === null ? "0/10" : `${rating}/10`}
             </Text>
             {Array.from({ length: 10 }, (_, index) => (
