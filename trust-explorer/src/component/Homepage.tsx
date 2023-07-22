@@ -23,8 +23,6 @@ interface IMainContentProps {
 export default function Homepage({ children }: IMainContentProps): JSX.Element {
   const { colorMode } = useColorMode();
 
-  const bgColor = useColorModeValue("gray.50", "gray.900");
-
   const buttonStyleProps:
     | ComponentDefaultProps
     | ComponentWithAs<"button", IconButtonProps> = {
@@ -36,7 +34,7 @@ export default function Homepage({ children }: IMainContentProps): JSX.Element {
   };
 
   return (
-    <Box bgColor={bgColor} overflow="hidden">
+    <Box overflow="hidden">
       <Flex
         gap={4}
         height=""

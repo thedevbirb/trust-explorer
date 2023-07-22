@@ -25,7 +25,10 @@ import { FiBox, FiSearch } from "react-icons/fi";
 
 // --- Validation Schema and Type ---
 const validationSchema = Yup.object().shape({
-  address: Yup.string().required("address is required!"),
+  address: Yup.string()
+    .min(42, "Invalid address")
+    .max(42, "Invalid address")
+    .required("address is required!"),
 });
 
 type FormType = Yup.InferType<typeof validationSchema>;
