@@ -27,7 +27,8 @@ export async function generateAttestation(
   nullifierHash: string
 ) {
   const provider = new ethers.BrowserProvider(window.ethereum); //web3Provider(window.ethereum);
-  //eas.connect(signer);
+  const signer = await provider.getSigner();
+  eas.connect(signer as any);
 
   // Initialize SchemaEncoder with the schema string
   const schemaEncoder = new SchemaEncoder(
