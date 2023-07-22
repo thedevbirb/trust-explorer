@@ -46,8 +46,6 @@ export async function generateAttestation(
     { name: "proof", value: proof, type: "bytes" },
   ]);
 
-  console.log("encodedData", encodedData);
-
   const schemaUID =
     "0xfd1d09737b6a97b7feae8d388f71e17b8dec6cb19d10ab6fef6bc337859cdb2b";
   //"0x983d44f93dfaac4764f1189f3bc04a4cd5e134e1f79b7dd185af10c9c5db3871";

@@ -12,6 +12,8 @@ import {
   AlertIcon,
   AlertTitle,
   Link,
+  Image,
+  Center,
 } from "@chakra-ui/react";
 import { FiStar } from "react-icons/fi";
 
@@ -122,7 +124,22 @@ export default function ContractView(props: Props) {
             color="blue.100"
             textUnderlineOffset={2}
           >
-            {contractAddress}
+            <Center>
+              <Flex>
+                {contractAddress?.toLowerCase() ===
+                "0x1a5650d0ecbca349dd84bafa85790e3e6955eb84" ? (
+                  <Image
+                    src={"/eas.png"}
+                    width={14}
+                    height={14}
+                    margin={"auto"}
+                  />
+                ) : (
+                  <></>
+                )}
+                <Text marginY={"auto"}>{contractAddress}</Text>
+              </Flex>
+            </Center>
           </Link>
         </Heading>
 
