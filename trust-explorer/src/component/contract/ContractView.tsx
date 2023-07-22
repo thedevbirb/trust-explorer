@@ -90,20 +90,19 @@ export default function ContractView(props: Props) {
       : messageData.goodRating;
 
   return (
-    <Box overflow="hidden">
-      {/* <Header /> // Assuming this is a custom header */}
-      <Container
-        maxW={"6xl"}
-        centerContent
+    <Flex alignItems="center">
+      <Box
+        w="1200px" // Set the width to 100vw to take up the entire viewport width
+        mx={"auto"}
+        alignSelf={"center"}
         marginTop={32}
+        borderRadius={"xl"}
+        alignContent={"center"}
         bg="brand.900"
-        borderRadius={"2xl"}
-        py={8}
       >
         <Heading
           padding="4"
-          maxW="5xl"
-          size={"lg"}
+          fontSize={"2xl"}
           color={"white"}
           textAlign={"center"}
         >
@@ -155,7 +154,6 @@ export default function ContractView(props: Props) {
             Review
           </Button>
         </Flex>
-
         <Box w="300px" h="50px" bgColor="blue.500" color="white" rounded={"md"}>
           <IDKitWidget
             app_id="app_eb57bcd2529a2b84af1704d76ab9210c"
@@ -180,7 +178,7 @@ export default function ContractView(props: Props) {
             {({ open }) => <button onClick={open}>Verify with World ID</button>}
           </IDKitWidget>
         </Box>
-      </Container>
-    </Box>
+      </Box>
+    </Flex>
   );
 }
