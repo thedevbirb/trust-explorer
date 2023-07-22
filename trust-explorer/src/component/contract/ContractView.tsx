@@ -9,8 +9,11 @@ import {
 import Header from "../Header";
 import React from "react";
 import { FiEdit2 } from "react-icons/fi";
+import { useAsyncMemo } from "use-async-memo";
+import { useGraph } from "../../hooks/useGraph";
+import { useMetaMask } from "../../hooks/useMetamask";
 interface Props {
-  address: string;
+  contractAddress: string;
 }
 import { CredentialType, IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
 import { generateAttestation, generateSignal } from "../../utils/helpers";
@@ -18,7 +21,12 @@ import { useRouter } from "next/router";
 import { useMetaMask } from "../../hooks/useMetamask";
 
 export default function ContractView(props: Props) {
-  const { address } = props;
+  const { contractAddress } = props;
+  const {
+    state: { wallet },
+  } = useMetaMask();
+
+  const { queryAttestation } = useGraph();
   const [isLoading, setIsLoading] = React.useState(false);
   const { colorMode } = useColorMode();
   const router = useRouter();
@@ -47,7 +55,7 @@ export default function ContractView(props: Props) {
           color={"white"}
           textAlign={"center"}
         >
-          Your viewing contract {address}
+          Your viewing contract {contractAddress}
         </Heading>
         <Stack direction="row" spacing={4}>
           <Button

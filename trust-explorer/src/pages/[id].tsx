@@ -12,9 +12,7 @@ const ID: NextPage = () => {
 
   const contractId = useMemo(() => params.id as string, [params.id]);
 
-  console.log(contractId);
-
-  return <ContractView address={contractId} />;
+  return <ContractView contractAddress={contractId} />;
 };
 
 export default ID;

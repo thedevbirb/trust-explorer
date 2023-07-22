@@ -23,6 +23,7 @@ export default function Wallet() {
         method: "eth_getBalance",
         params: [accounts[0], "latest"],
       })) as string;
+
       dispatch({ type: "connect", wallet: accounts[0], balance });
       listen();
     }
